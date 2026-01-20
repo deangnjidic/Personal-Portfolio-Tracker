@@ -36,6 +36,11 @@
         if (stored) {
             try {
                 state = JSON.parse(stored);
+                // Remove snapshots if present (legacy data)
+                if (state.snapshots) {
+                    delete state.snapshots;
+                    saveState(); // Save cleaned state
+                }
             } catch (e) {
                 console.error('Failed to parse stored data:', e);
             }
@@ -50,8 +55,6 @@
     function setupEventListeners() {
         // Header buttons
         document.getElementById('refreshBtn').addEventListener('click', refreshPrices);
-        document.getElementById('snapshotBtn').addEventListener('click', saveSnapshot);
-        document.getElementById('clearSnapshotsBtn').addEventListener('click', clearSnapshots);
         document.getElementById('exportBtn').addEventListener('click', exportData);
         document.getElementById('importBtn').addEventListener('click', () => {
             document.getElementById('importFile').click();
@@ -884,6 +887,11 @@
                 if (!imported.settings) {
                     alert('Invalid backup file: missing settings');
                     return;
+                }
+
+                // Remove snapshots if present (legacy data)
+                if (imported.snapshots) {
+                    delete imported.snapshots;
                 }
 
                 state = imported;

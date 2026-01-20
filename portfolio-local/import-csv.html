@@ -149,13 +149,16 @@ NVDA,NVIDIA,28.54508,22.47,641.33..."></textarea>
                         lastUpdated: 0,
                         prices: {},
                         previousPrices: {}
-                    },
-                    snapshots: []
+                    }
                 };
 
                 const stored = localStorage.getItem('portfolio_v1');
                 if (stored) {
                     state = JSON.parse(stored);
+                    // Remove snapshots if present (legacy data)
+                    if (state.snapshots) {
+                        delete state.snapshots;
+                    }
                 }
 
                 // Add or update stocks

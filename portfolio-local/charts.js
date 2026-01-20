@@ -12,8 +12,7 @@
             lastUpdated: 0,
             prices: {},
             previousPrices: {}
-        },
-        snapshots: []
+        }
     };
 
     // Load state from localStorage
