@@ -11,7 +11,8 @@
         priceCache: {
             lastUpdated: 0,
             prices: {},
-            previousPrices: {}
+            previousPrices: {},
+            changePercents: {}
         }
     };
 
@@ -253,76 +254,65 @@
             }
         });
 
-        // 4. Historical Trend Line Chart
-        const historicalCtx = document.getElementById('historicalChart').getContext('2d');
-        
-        const sortedSnapshots = [...state.snapshots].sort((a, b) => a.timestamp - b.timestamp);
-        const dates = sortedSnapshots.map(s => new Date(s.date).toLocaleDateString());
-        const totalValues = sortedSnapshots.map(s => s.totalValue);
-        const deanValues = sortedSnapshots.map(s => s.deanTotal);
-        const samValues = sortedSnapshots.map(s => s.samTotal);
+        // 4. Top and Bottom Performers
+        displayTopBottomPerformers();
+    }
 
-        new Chart(historicalCtx, {
-            type: 'line',
-            data: {
-                labels: dates.length > 0 ? dates : ['No data'],
-                datasets: [
-                    {
-                        label: 'Total Portfolio',
-                        data: totalValues.length > 0 ? totalValues : [0],
-                        borderColor: '#22c55e',
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Dean',
-                        data: deanValues.length > 0 ? deanValues : [0],
-                        borderColor: colors.dean,
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Sam',
-                        data: samValues.length > 0 ? samValues : [0],
-                        borderColor: colors.sam,
-                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    x: { 
-                        ticks: { color: '#e6edf3' },
-                        grid: { color: '#30363d' }
-                    },
-                    y: { 
-                        ticks: { 
-                            color: '#e6edf3',
-                            callback: (value) => '$' + value.toLocaleString()
-                        },
-                        grid: { color: '#30363d' }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: { color: '#e6edf3' }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => `${context.dataset.label}: $${context.parsed.y.toLocaleString()}`
-                        }
-                    }
-                }
+    // Display top and bottom performers
+    function displayTopBottomPerformers() {
+        const performers = [];
+
+        state.assets.forEach(asset => {
+            const cacheKey = `${asset.type}:${asset.symbol}`;
+            const currentPrice = state.priceCache.prices[cacheKey];
+            const changePercent = state.priceCache.changePercents ? state.priceCache.changePercents[cacheKey] : 0;
+
+            if (currentPrice && changePercent !== undefined && changePercent !== null) {
+                performers.push({
+                    name: asset.name,
+                    symbol: asset.symbol,
+                    type: asset.type,
+                    currentPrice: currentPrice,
+                    changePercent: changePercent
+                });
             }
         });
+
+        // Sort by change percentage
+        performers.sort((a, b) => b.changePercent - a.changePercent);
+
+        // Top 10
+        const top10 = performers.slice(0, 10);
+        const topContainer = document.getElementById('topPerformers');
+        topContainer.innerHTML = top10.length > 0 ? top10.map(p => `
+            <div class="performer-item">
+                <div class="performer-info">
+                    <span class="performer-name">${p.name}</span>
+                    <span class="performer-symbol">${p.symbol.toUpperCase()}</span>
+                    <span class="performer-type">${p.type}</span>
+                </div>
+                <div class="performer-stats">
+                    <span class="performer-price">$${p.currentPrice.toFixed(2)}</span>
+                    <span class="performer-change positive">+${p.changePercent.toFixed(2)}%</span>
+                </div>
+            </div>
+        `).join('') : '<p class="no-data">No price data available</p>';
+
+        // Bottom 10
+        const bottom10 = performers.slice(-10).reverse();
+        const bottomContainer = document.getElementById('bottomPerformers');
+        bottomContainer.innerHTML = bottom10.length > 0 ? bottom10.map(p => `
+            <div class="performer-item">
+                <div class="performer-info">
+                    <span class="performer-name">${p.name}</span>
+                    <span class="performer-symbol">${p.symbol.toUpperCase()}</span>
+                    <span class="performer-type">${p.type}</span>
+                </div>
+                <div class="performer-stats">
+                    <span class="performer-price">$${p.currentPrice.toFixed(2)}</span>
+                    <span class="performer-change negative">${p.changePercent.toFixed(2)}%</span>
+                </div>
+            </div>
+        `).join('') : '<p class="no-data">No price data available</p>';
     }
 })();

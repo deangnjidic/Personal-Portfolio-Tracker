@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio History</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Portfolio History</h1>
+            <div class="header-controls">
+                <button onclick="window.location.href='index.html'" class="btn btn-secondary">← Back to Portfolio</button>
+                <button id="refreshBtn" class="btn btn-primary">🔄 Refresh Prices</button>
+                <button id="saveSnapshotBtn" class="btn btn-success">💾 Save Snapshot</button>
+                <button id="clearHistoryBtn" class="btn btn-danger">🗑️ Clear History</button>
+            </div>
+        </div>
+        <div class="header-status">
+            <span id="lastUpdated">Last updated: Never</span>
+            <span id="updateStatus"></span>
+            <span id="totalSnapshots">0 snapshots</span>
+            <span id="lastSnapshotInfo" class="snapshot-info">No snapshots saved yet</span>
+        </div>
+    </header>
+
+    <!-- History Stats -->
+    <section class="history-stats">
+        <div class="stat-card">
+            <span class="stat-label">Current Value</span>
+            <span class="stat-value" id="currentValue">$0.00</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">First Snapshot</span>
+            <span class="stat-value" id="firstValue">$0.00</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total Gain/Loss</span>
+            <span class="stat-value" id="totalChange">$0.00 (0%)</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Best Day</span>
+            <span class="stat-value" id="bestDay">-</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Worst Day</span>
+            <span class="stat-value" id="worstDay">-</span>
+        </div>
+    </section>
+
+    <!-- History Table -->
+    <section class="history-table-container">
+        <table class="holdings-table">
+            <thead>
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Total Value</th>
+                    <th>Change ($)</th>
+                    <th>Change (%)</th>
+                    <th>Assets Up</th>
+                    <th>Assets Down</th>
+                    <th>Total Assets</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody">
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px; color: #8b949e;">
+                        No snapshots saved yet. Go to the main portfolio page and click "Save Snapshot" to start tracking your portfolio history.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script src="config.example.js"></script>
+    <script src="config.js"></script>
+    <script src="history.js"></script>
+</body>
+</html>

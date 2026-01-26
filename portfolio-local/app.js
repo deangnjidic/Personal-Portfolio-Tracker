@@ -12,8 +12,10 @@
         priceCache: {
             lastUpdated: 0,
             prices: {},
-            previousPrices: {}
-        }
+            previousPrices: {},
+            changePercents: {} // Store 24h percentage changes from API
+        },
+        snapshots: [] // Historical portfolio snapshots
     };
 
     let currentFilter = 'all';
@@ -36,10 +38,9 @@
         if (stored) {
             try {
                 state = JSON.parse(stored);
-                // Remove snapshots if present (legacy data)
-                if (state.snapshots) {
-                    delete state.snapshots;
-                    saveState(); // Save cleaned state
+                // Ensure snapshots array exists
+                if (!state.snapshots) {
+                    state.snapshots = [];
                 }
             } catch (e) {
                 console.error('Failed to parse stored data:', e);
@@ -362,11 +363,21 @@
 
             console.log('Assets to fetch:', { stocks, cryptos, metals, savings: savings.length });
 
+            // Progress tracking
+            let completed = 0;
+            const totalToFetch = stocks.length + cryptos.length + metals.length;
+            
+            const updateProgress = () => {
+                completed++;
+                const percent = Math.round((completed / totalToFetch) * 100);
+                statusEl.textContent = `Fetching prices... ${completed}/${totalToFetch} (${percent}%)`;
+            };
+
             // Fetch prices (Finnhub for both stocks and crypto)
             const [stockPrices, cryptoPrices, metalPrices] = await Promise.all([
-                stocks.length > 0 ? fetchStockPricesFinnhub(stocks) : Promise.resolve(new Map()),
-                cryptos.length > 0 ? fetchCryptoPricesFinnhub(cryptos) : Promise.resolve(new Map()),
-                metals.length > 0 ? fetchMetalPricesMetalsDev(metals, state.settings.baseCurrency) : Promise.resolve(new Map())
+                stocks.length > 0 ? fetchStockPricesFinnhub(stocks, updateProgress) : Promise.resolve(new Map()),
+                cryptos.length > 0 ? fetchCryptoPricesFinnhub(cryptos, updateProgress) : Promise.resolve(new Map()),
+                metals.length > 0 ? fetchMetalPricesMetalsDev(metals, state.settings.baseCurrency, updateProgress) : Promise.resolve(new Map())
             ]);
 
             console.log('Fetched prices:', { 
@@ -378,29 +389,53 @@
             // Update cache
             state.assets.forEach(asset => {
                 const cacheKey = `${asset.type}:${asset.symbol}`;
-                let price = null;
+                let priceData = null;
 
                 if (asset.type === 'stock') {
-                    price = stockPrices.get(asset.symbol);
+                    priceData = stockPrices.get(asset.symbol);
                 } else if (asset.type === 'crypto') {
-                    price = cryptoPrices.get(asset.symbol);
+                    priceData = cryptoPrices.get(asset.symbol);
                 } else if (asset.type === 'metal') {
-                    price = metalPrices.get(asset.symbol);
+                    priceData = metalPrices.get(asset.symbol);
                 } else if (asset.type === 'savings') {
                     // Savings use 1:1 value (quantity = dollar amount)
-                    price = 1.0;
+                    priceData = 1.0;
                 }
 
-                console.log(`Processing ${asset.name} (${cacheKey}): price=${price}`);
+                console.log(`Processing ${asset.name} (${cacheKey}): priceData=`, priceData);
 
-                if (price !== null && price !== undefined && !isNaN(price)) {
+                // Handle both old format (number) and new format (object with price and changePercent)
+                let price = null;
+                let changePercent = null;
+                
+                if (typeof priceData === 'object' && priceData !== null && !Array.isArray(priceData)) {
+                    price = priceData.price;
+                    changePercent = priceData.changePercent;
+                } else if (typeof priceData === 'number') {
+                    price = priceData;
+                    // For savings type only, use 0%
+                    changePercent = 0;
+                } else if (priceData === null || priceData === undefined) {
+                    console.warn(`No price data returned for ${cacheKey}`);
+                } else {
+                    console.warn(`Unexpected priceData type for ${cacheKey}:`, typeof priceData, priceData);
+                }
+
+                if (price !== null && price !== undefined && !isNaN(price) && price > 0) {
                     // Store previous price before updating
                     if (state.priceCache.prices[cacheKey] !== undefined) {
                         state.priceCache.previousPrices[cacheKey] = state.priceCache.prices[cacheKey];
                     }
                     state.priceCache.prices[cacheKey] = price;
+                    
+                    // Store 24h change percentage separately
+                    if (!state.priceCache.changePercents) {
+                        state.priceCache.changePercents = {};
+                    }
+                    state.priceCache.changePercents[cacheKey] = changePercent;
+                    
                     results.updated++;
-                    console.log(`✓ Updated ${cacheKey} = ${price}`);
+                    console.log(`✓ Updated ${cacheKey} = ${price} (${changePercent.toFixed(2)}%)`);
                 } else {
                     results.errors++;
                     console.log(`✗ Error for ${cacheKey}, price was: ${price}`);
@@ -423,7 +458,12 @@
         render();
     }
 
-    async function fetchStockPricesFinnhub(symbols) {
+    // Helper: Add delay between API calls to avoid rate limiting
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fetchStockPricesFinnhub(symbols, onProgress) {
         const prices = new Map();
         const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
 
@@ -432,27 +472,56 @@
             return prices;
         }
 
-        for (const symbol of symbols) {
+        // Rate limit: 60 calls/min free tier, so ~1 call per second
+        const delayMs = 1100;
+        
+        for (let i = 0; i < symbols.length; i++) {
+            const symbol = symbols[i];
             try {
                 const response = await fetch(
                     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
                 );
                 
+                if (response.status === 429) {
+                    console.warn(`Rate limit hit for ${symbol}, waiting...`);
+                    await delay(5000);
+                    continue;
+                }
+                
                 if (response.ok) {
                     const data = await response.json();
                     if (data.c && data.c > 0) {
-                        prices.set(symbol, data.c);
+                        // Calculate 24h change using previous close
+                        // pc = previous close, c = current
+                        let changePercent = 0;
+                        if (data.pc && data.pc > 0) {
+                            changePercent = ((data.c - data.pc) / data.pc) * 100;
+                        }
+                        prices.set(symbol, {
+                            price: data.c,
+                            changePercent: changePercent,
+                            previousPrice: data.pc || data.c
+                        });
                     }
+                }
+                
+                // Update progress
+                if (onProgress) onProgress();
+                
+                // Add delay between requests
+                if (i < symbols.length - 1) {
+                    await delay(delayMs);
                 }
             } catch (error) {
                 console.error(`Error fetching ${symbol}:`, error);
+                if (onProgress) onProgress();
             }
         }
 
         return prices;
     }
 
-    async function fetchCryptoPricesFinnhub(symbols) {
+    async function fetchCryptoPricesFinnhub(symbols, onProgress) {
         const prices = new Map();
         const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
 
@@ -460,29 +529,57 @@
             console.warn('Finnhub API key not configured');
             return prices;
         }
+
+        // Rate limit: same as stocks
+        const delayMs = 1100;
 
         // Use same fetcher as stocks - Finnhub handles crypto symbols like BINANCE:BTCUSDT
-        for (const symbol of symbols) {
+        for (let i = 0; i < symbols.length; i++) {
+            const symbol = symbols[i];
             try {
                 const response = await fetch(
                     `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
                 );
                 
+                if (response.status === 429) {
+                    console.warn(`Rate limit hit for ${symbol}, waiting...`);
+                    await delay(5000);
+                    continue;
+                }
+                
                 if (response.ok) {
                     const data = await response.json();
                     if (data.c && data.c > 0) {
-                        prices.set(symbol, data.c);
+                        // Calculate 24h change using previous close
+                        let changePercent = 0;
+                        if (data.pc && data.pc > 0) {
+                            changePercent = ((data.c - data.pc) / data.pc) * 100;
+                        }
+                        prices.set(symbol, {
+                            price: data.c,
+                            changePercent: changePercent,
+                            previousPrice: data.pc || data.c
+                        });
                     }
+                }
+                
+                // Update progress
+                if (onProgress) onProgress();
+                
+                // Add delay between requests
+                if (i < symbols.length - 1) {
+                    await delay(delayMs);
                 }
             } catch (error) {
                 console.error(`Error fetching ${symbol}:`, error);
+                if (onProgress) onProgress();
             }
         }
 
         return prices;
     }
 
-    async function fetchMetalPricesMetalsDev(metals, baseCurrency) {
+    async function fetchMetalPricesMetalsDev(metals, baseCurrency, onProgress) {
         const prices = new Map();
         const apiKey = window.APP_CONFIG?.METALS_DEV_KEY;
 
@@ -493,6 +590,7 @@
 
         for (const metal of metals) {
             try {
+                // Fetch current spot price
                 const response = await fetch(
                     `https://api.metals.dev/v1/metal/spot?api_key=${apiKey}&metal=${metal}&currency=${baseCurrency}`
                 );
@@ -501,33 +599,58 @@
                     const data = await response.json();
                     console.log(`metals.dev response for ${metal}:`, data);
                     
-                    // metals.dev returns: { rate: { price: 4670.99, ask: ..., bid: ... } }
+                    // Extract price and change from API response
                     let price = null;
+                    let changePercent = 0;
+                    let previousPrice = null;
                     
-                    // Check if rate is an object with nested price
-                    if (data.rate && typeof data.rate === 'object' && data.rate.price !== undefined) {
+                    // Try to extract price
+                    if (data.rate && typeof data.rate === 'object') {
                         price = data.rate.price;
+                        // Check for change data in the response
+                        if (data.rate.change !== undefined) {
+                            changePercent = data.rate.change;
+                        } else if (data.rate.change_pct !== undefined) {
+                            changePercent = data.rate.change_pct;
+                        } else if (data.rate.previous_close !== undefined && price) {
+                            // Calculate from previous close
+                            previousPrice = data.rate.previous_close;
+                            changePercent = ((price - previousPrice) / previousPrice) * 100;
+                        }
                     } else if (typeof data.rate === 'number') {
                         price = data.rate;
-                    } else if (data.price !== undefined && data.price !== null) {
+                    } else if (data.price !== undefined) {
                         price = data.price;
-                    } else if (data.spot !== undefined && data.spot !== null) {
-                        price = data.spot;
-                    } else if (data.value !== undefined && data.value !== null) {
-                        price = data.value;
+                        // Check for change fields
+                        if (data.change !== undefined) {
+                            changePercent = data.change;
+                        } else if (data.change_pct !== undefined) {
+                            changePercent = data.change_pct;
+                        } else if (data.previous_close !== undefined) {
+                            previousPrice = data.previous_close;
+                            changePercent = ((price - previousPrice) / previousPrice) * 100;
+                        }
                     }
                     
                     if (price !== null && !isNaN(price) && price > 0) {
-                        console.log(`✓ Setting price for ${metal}: ${price}`);
-                        prices.set(metal, price);
+                        console.log(`✓ Setting price for ${metal}: ${price}, change: ${changePercent}%`);
+                        prices.set(metal, {
+                            price: price,
+                            changePercent: changePercent,
+                            previousPrice: previousPrice || price
+                        });
                     } else {
                         console.warn(`✗ Could not extract valid price for ${metal}`);
                     }
                 } else {
                     console.error(`metals.dev API error for ${metal}: ${response.status} ${response.statusText}`);
                 }
+                
+                // Update progress
+                if (onProgress) onProgress();
             } catch (error) {
                 console.error(`Error fetching ${metal}:`, error);
+                if (onProgress) onProgress();
             }
         }
 
@@ -619,25 +742,26 @@
     }
 
     function getPriceChange(cacheKey, currentPrice) {
-        const previousPrice = state.priceCache.previousPrices[cacheKey];
-        if (!previousPrice || previousPrice === currentPrice) {
+        // Use the stored 24h change percentage from API
+        const changePercent = state.priceCache.changePercents && state.priceCache.changePercents[cacheKey];
+        
+        if (changePercent === undefined || changePercent === null || changePercent === 0) {
             return { arrow: '', className: '', percent: '' };
         }
         
-        const change = currentPrice - previousPrice;
-        const changePercent = ((change / previousPrice) * 100).toFixed(2);
+        const formattedPercent = changePercent.toFixed(2);
         
-        if (change > 0) {
+        if (changePercent > 0) {
             return { 
                 arrow: '↑', 
                 className: 'price-up', 
-                percent: `+${changePercent}%` 
+                percent: `+${formattedPercent}%` 
             };
         } else {
             return { 
                 arrow: '↓', 
                 className: 'price-down', 
-                percent: `${changePercent}%` 
+                percent: `${formattedPercent}%` 
             };
         }
     }
@@ -723,10 +847,17 @@
                     aVal = a.type;
                     bVal = b.type;
                 } else if (currentSort.column === 'price') {
+                    // Sort by 24h percentage change from API
                     const aCacheKey = `${a.type}:${a.symbol}`;
                     const bCacheKey = `${b.type}:${b.symbol}`;
-                    aVal = state.priceCache.prices[aCacheKey] || 0;
-                    bVal = state.priceCache.prices[bCacheKey] || 0;
+                    
+                    // Use stored 24h change percentages from API
+                    aVal = state.priceCache.changePercents && state.priceCache.changePercents[aCacheKey] !== undefined
+                        ? Number(state.priceCache.changePercents[aCacheKey])
+                        : 0;
+                    bVal = state.priceCache.changePercents && state.priceCache.changePercents[bCacheKey] !== undefined
+                        ? Number(state.priceCache.changePercents[bCacheKey])
+                        : 0;
                 } else if (currentSort.column === 'combined') {
                     const aCalc = calculateAssetValues(a);
                     const bCalc = calculateAssetValues(b);
@@ -819,12 +950,9 @@
         
         state.assets.forEach(asset => {
             const cacheKey = `${asset.type}:${asset.symbol}`;
-            const currentPrice = state.priceCache.prices[cacheKey];
-            const previousPrice = state.priceCache.previousPrices[cacheKey];
+            const changePercent = state.priceCache.changePercents && state.priceCache.changePercents[cacheKey];
             
-            if (currentPrice && previousPrice && previousPrice !== currentPrice) {
-                const changePercent = ((currentPrice - previousPrice) / previousPrice) * 100;
-                
+            if (changePercent !== undefined && changePercent !== null) {
                 if (changePercent > bestChange.percent) {
                     bestChange = { asset, percent: changePercent };
                 }
@@ -858,7 +986,17 @@
 
     // Import/Export
     function exportData() {
-        const dataStr = JSON.stringify(state, null, 2);
+        // Include API keys and snapshots in the export
+        const exportData = {
+            ...state,
+            apiKeys: {
+                FINNHUB_KEY: window.APP_CONFIG?.FINNHUB_KEY || '',
+                METALS_DEV_KEY: window.APP_CONFIG?.METALS_DEV_KEY || '',
+                COINGECKO_DEMO_KEY: window.APP_CONFIG?.COINGECKO_DEMO_KEY || ''
+            }
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         
@@ -889,9 +1027,19 @@
                     return;
                 }
 
-                // Remove snapshots if present (legacy data)
-                if (imported.snapshots) {
-                    delete imported.snapshots;
+                // Ensure snapshots array exists
+                if (!imported.snapshots) {
+                    imported.snapshots = [];
+                }
+
+                // Restore API keys to config.js if present
+                if (imported.apiKeys) {
+                    if (window.APP_CONFIG) {
+                        window.APP_CONFIG.FINNHUB_KEY = imported.apiKeys.FINNHUB_KEY || window.APP_CONFIG.FINNHUB_KEY;
+                        window.APP_CONFIG.METALS_DEV_KEY = imported.apiKeys.METALS_DEV_KEY || window.APP_CONFIG.METALS_DEV_KEY;
+                        window.APP_CONFIG.COINGECKO_DEMO_KEY = imported.apiKeys.COINGECKO_DEMO_KEY || window.APP_CONFIG.COINGECKO_DEMO_KEY;
+                    }
+                    delete imported.apiKeys; // Don't save API keys to state
                 }
 
                 state = imported;

@@ -14,6 +14,7 @@
             <h1>Portfolio Charts</h1>
             <div class="header-controls">
                 <button onclick="window.location.href='index.html'" class="btn btn-secondary">← Back to Portfolio</button>
+                <button onclick="window.location.href='history.html'" class="btn btn-secondary">📈 History</button>
             </div>
         </div>
     </header>
@@ -37,11 +38,17 @@
             <h3>Portfolio Breakdown</h3>
             <canvas id="breakdownChart"></canvas>
         </div>
+    </section>
 
-        <!-- Historical Trend Line Chart -->
-        <div class="chart-card chart-card-wide">
-            <h3>Portfolio Value Over Time</h3>
-            <canvas id="historicalChart"></canvas>
+    <!-- Top/Bottom Performers Section -->
+    <section class="performers-section">
+        <div class="performers-card">
+            <h3>📈 Top 10 Performers</h3>
+            <div id="topPerformers" class="performers-list"></div>
+        </div>
+        <div class="performers-card">
+            <h3>📉 Bottom 10 Performers</h3>
+            <div id="bottomPerformers" class="performers-list"></div>
         </div>
     </section>
 

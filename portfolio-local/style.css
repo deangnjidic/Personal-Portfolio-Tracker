@@ -50,6 +50,11 @@ body {
     flex-wrap: wrap;
 }
 
+.snapshot-info {
+    color: #58a6ff;
+    font-weight: 500;
+}
+
 .assets-count {
     font-weight: 500;
     color: #e6edf3;
@@ -113,6 +118,15 @@ body {
     background: #2ea043;
 }
 
+.btn-success {
+    background: #1f6feb;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #388bfd;
+}
+
 .btn-secondary {
     background: #21262d;
     color: #c9d1d9;
@@ -122,6 +136,29 @@ body {
 .btn-secondary:hover {
     background: #30363d;
     border-color: #8b949e;
+}
+
+.btn-danger {
+    background: #da3633;
+    color: white;
+    border: 1px solid #f85149;
+}
+
+.btn-danger:hover {
+    background: #f85149;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    transition: transform 0.1s;
+}
+
+.btn-icon:hover {
+    transform: scale(1.2);
 }
 
 .btn:disabled {
@@ -710,6 +747,157 @@ body {
 
 .chart-card-wide canvas {
     max-height: 400px;
+}
+
+/* Performers Section */
+.performers-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.performers-card {
+    background: #161b22;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid #30363d;
+}
+
+.performers-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e6edf3;
+    margin-bottom: 15px;
+}
+
+.performers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.performer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #0d1117;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    transition: background 0.2s;
+}
+
+.performer-item:hover {
+    background: #161b22;
+}
+
+.performer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.performer-name {
+    font-weight: 500;
+    color: #e6edf3;
+    font-size: 14px;
+}
+
+.performer-symbol {
+    font-size: 12px;
+    color: #8b949e;
+    font-family: 'Courier New', monospace;
+}
+
+.performer-type {
+    font-size: 11px;
+    color: #6e7681;
+    text-transform: uppercase;
+}
+
+.performer-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.performer-price {
+    font-weight: 600;
+    color: #e6edf3;
+    font-size: 14px;
+}
+
+.performer-change {
+    font-weight: 600;
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.performer-change.positive {
+    color: #3fb950;
+    background: rgba(63, 185, 80, 0.15);
+}
+
+.performer-change.negative {
+    color: #f85149;
+    background: rgba(248, 81, 73, 0.15);
+}
+
+.performers-list .no-data {
+    text-align: center;
+    color: #8b949e;
+    padding: 20px;
+}
+
+/* History Page */
+.history-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #161b22;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-card .stat-label {
+    font-size: 12px;
+    color: #8b949e;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.stat-card .stat-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e6edf3;
+}
+
+.stat-card .stat-value.positive {
+    color: #3fb950;
+}
+
+.stat-card .stat-value.negative {
+    color: #f85149;
+}
+
+.history-table-container {
+    background: #161b22;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    overflow-x: auto;
 }
 
 /* Compare Page */
