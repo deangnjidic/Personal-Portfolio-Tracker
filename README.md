@@ -1,33 +1,81 @@
-# Portfolio Tracker (Local)
+# 💰 Portfolio Tracker
 
-A minimal, local-only portfolio tracker for stocks, crypto, and precious metals. No server, no database - just open `index.html` in your browser!
+> A beautiful, privacy-first portfolio tracker for stocks, crypto, and precious metals. No server, no database, no tracking - your data never leaves your device.
 
-## Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Made with Vanilla JS](https://img.shields.io/badge/Made%20with-Vanilla%20JS-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![No Dependencies](https://img.shields.io/badge/Dependencies-None-green.svg)]()
 
-- **Multi-Asset Tracking**: Stocks, cryptocurrencies, precious metals, and savings accounts
-- **Two-Person Holdings**: Track holdings for Dean and Sam separately
-- **Live Price Updates**: Fetch real-time prices from APIs (Finnhub, metals.dev)
-- **Portfolio History**: Save daily snapshots to track portfolio growth over time
-- **Charts & Visualizations**: Asset allocation pie charts, person comparison, and breakdown charts
-- **Top/Bottom Performers**: See your best and worst performing assets by % change
-- **Market News**: View market news for your holdings
-- **Local Storage**: All data stored in your browser's localStorage
-- **Import/Export**: Backup and restore your portfolio as JSON (includes history)
-- **CSV Import**: Bulk import assets from CSV files
-- **Sorting & Filtering**: Sort by any column, filter by asset type, search by name/symbol
+[🚀 Live Demo](https://your-username.github.io/Personal-Portfolio-Tracker/) | [📖 Documentation](#usage) | [🐛 Report Bug](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues) | [💡 Request Feature](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues)
 
-## Setup
+---
 
-1. **Get API Keys** (all free tier):
-   - [Finnhub](https://finnhub.io/) - for stock prices (60 calls/min free)
-   - [metals.dev](https://metals.dev/) - for precious metal prices
+## ✨ Features
 
-2. **Create config.js**:
+### 📊 **Multi-Asset Support**
+Track your entire investment portfolio in one place:
+- 📈 **Stocks** - US and international equities
+- 💎 **Cryptocurrencies** - Bitcoin, Ethereum, and more
+- 🥇 **Precious Metals** - Gold, Silver, Platinum, Palladium
+- 💰 **Savings Accounts** - Cash and savings
+
+### 👥 **Multi-Person Tracking**
+- Track holdings for two people (customizable names)
+- Compare portfolios side-by-side
+- Individual and combined portfolio views
+- Perfect for couples or joint investments
+
+### 📈 **Real-Time Data**
+- Live price updates from trusted APIs
+- 24-hour price change tracking
+- Historical snapshots and growth tracking
+- Top/Bottom performers with % gains/losses
+
+### 📊 **Visualizations**
+- **Asset Allocation Charts** - Pie charts showing portfolio breakdown
+- **Person Comparison** - Compare holdings by asset type
+- **Historical Performance** - Track portfolio growth over time
+- **Performance Rankings** - Top 10 best and worst performers
+
+### 🔒 **Privacy & Security**
+- **100% Local** - All data stored in browser's localStorage
+- **No Server** - No backend, no database, no data collection
+- **No Tracking** - Your portfolio data never leaves your device
+- **Offline Capable** - Works without internet after initial load
+
+### 🛠️ **Power User Features**
+- **Import/Export** - Backup and restore as JSON
+- **CSV Import** - Bulk import from M1 Finance or custom CSV
+- **Search & Filter** - Find assets instantly
+- **Sorting** - Sort by any column
+- **Market News** - View news for your holdings
+- **Customizable** - Change currency, person names, and more
+
+---
+
+## 🚀 Quick Start
+
+### Option 1: Online (Easiest)
+Visit the [live demo](https://your-username.github.io/Personal-Portfolio-Tracker/) and start tracking immediately!
+
+### Option 2: Local Installation
+
+1. **Download or Clone**
+   ```bash
+   git clone https://github.com/deangnjidic/Personal-Portfolio-Tracker.git
+   cd Personal-Portfolio-Tracker/portfolio-local
+   ```
+
+2. **Get Free API Keys**
+   - [Finnhub](https://finnhub.io/) - Stock prices (60 calls/min free)
+   - [Metals.dev](https://metals.dev/) - Precious metal prices (free tier)
+
+3. **Configure**
    ```bash
    cp config.example.js config.js
    ```
-
-3. **Add your API keys** to `config.js`:
+   
+   Edit `config.js` with your API keys:
    ```javascript
    window.APP_CONFIG = {
      baseCurrency: "USD",
@@ -38,7 +86,176 @@ A minimal, local-only portfolio tracker for stocks, crypto, and precious metals.
    };
    ```
 
-4. **Open `index.html`** in your browser - that's it!
+4. **Run**
+   ```bash
+   # Using Python
+   python3 -m http.server 8000
+   
+   # Or using Node.js
+   npx http-server -p 8000
+   ```
+   
+   Open `http://localhost:8000` in your browser!
+
+---
+
+## 📖 Usage
+
+### Adding Your First Asset
+
+1. Click **"Add Asset"** button
+2. Select asset type (Stock/Crypto/Metal/Savings)
+3. Enter details:
+   - **Symbol** - Ticker symbol (e.g., AAPL, BTC, GOLD)
+   - **Name** - Display name
+   - **Quantity** - How much you own for each person
+4. Click **"Save"**
+
+The app will automatically fetch the current price and calculate your holdings value.
+
+### Customizing Person Names
+
+1. Click **⚙️ Settings** button
+2. Enter custom names (default: "Dean" and "Sam")
+3. Click **"Save Settings"**
+
+All labels throughout the app will update with your custom names!
+
+### Taking Portfolio Snapshots
+
+1. Click **"Save Snapshot"** to record current portfolio value
+2. View historical performance in **📈 History** page
+3. Track growth over time with interactive charts
+
+### Importing Data
+
+**From CSV:**
+1. Go to **📥 Import CSV** page
+2. Upload M1 Finance CSV or custom format
+3. Map columns and import
+
+**From JSON:**
+1. Click **"Import"** button
+2. Select your backup `.json` file
+3. Data restored including history!
+
+---
+
+## 📸 Screenshots
+
+### Main Portfolio View
+*Track all your holdings with live prices and portfolio breakdown*
+
+### Charts & Analytics
+*Visualize your asset allocation and compare holdings*
+
+### Historical Performance
+*Monitor your portfolio growth over time*
+
+### Mobile Responsive
+*Works beautifully on any device*
+
+---
+
+## 🛠️ Technical Details
+
+### Built With
+- **Pure Vanilla JavaScript** - No frameworks, no bloat
+- **HTML5 & CSS3** - Modern, responsive design
+- **Chart.js** - Beautiful interactive charts
+- **localStorage** - Client-side data persistence
+
+### APIs Used
+- **Finnhub** - Stock market data
+- **CoinGecko** - Cryptocurrency prices
+- **Metals.dev** - Precious metal prices
+
+### Browser Support
+- ✅ Chrome/Edge (recommended)
+- ✅ Firefox
+- ✅ Safari
+- ✅ Mobile browsers
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
+3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+5. **Open** a Pull Request
+
+### Ideas for Contributions
+- 📱 Mobile app version
+- 🌍 Multi-language support
+- 📊 More chart types
+- 🔔 Price alerts
+- 📤 Export to CSV/PDF
+- 🎨 Theme customization
+
+---
+
+## 📝 Roadmap
+
+- [ ] Dark/Light theme toggle
+- [ ] Price alerts and notifications
+- [ ] PDF export for reports
+- [ ] More asset types (bonds, real estate)
+- [ ] Tax lot tracking
+- [ ] Dividend reinvestment calculator
+- [ ] Mobile app version
+
+---
+
+## ❓ FAQ
+
+**Q: Is my data safe?**  
+A: Yes! All data is stored locally in your browser. Nothing is sent to any server.
+
+**Q: Can I use this without API keys?**  
+A: You can add assets manually, but you won't get live price updates without API keys.
+
+**Q: Will my data sync across devices?**  
+A: No, data is stored locally per browser. Use Import/Export to transfer data between devices.
+
+**Q: Is this free?**  
+A: Yes! Completely free and open source under MIT License.
+
+**Q: Can I track more than 2 people?**  
+A: Currently limited to 2 people. Feel free to fork and modify for your needs!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 💖 Support
+
+If this project helped you, consider:
+- ⭐ **Starring** the repository
+- 🐛 **Reporting bugs** or suggesting features
+- 🤝 **Contributing** code or documentation
+- ☕ **Buying me a coffee** (optional, never required!)
+
+---
+
+## 👏 Acknowledgments
+
+- Thanks to [Finnhub](https://finnhub.io/), [CoinGecko](https://www.coingecko.com/), and [Metals.dev](https://metals.dev/) for their free APIs
+- Built with ❤️ for the privacy-conscious investor community
+- Inspired by the need for a simple, local-first portfolio tracker
+
+---
+
+**Made with ❤️ by [Dean Gnjidic](https://github.com/deangnjidic)**
+
+*Found this useful? Give it a ⭐️ on [GitHub](https://github.com/deangnjidic/Personal-Portfolio-Tracker)!*
 
 ## Usage
 
