@@ -20,6 +20,7 @@
                 <button onclick="window.location.href='import-csv.html'" class="btn btn-secondary">📥 Import CSV</button>
                 <button id="exportBtn" class="btn btn-secondary">Export</button>
                 <button id="importBtn" class="btn btn-secondary">Import</button>
+                <button id="settingsBtn" class="btn btn-secondary">⚙️ Settings</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;">
             </div>
         </div>
@@ -53,11 +54,11 @@
     <!-- Summary Cards -->
     <section class="summary">
         <div class="card">
-            <h3>Dean's Total</h3>
+            <h3 id="person1TotalLabel">Person 1's Total</h3>
             <div class="card-value" id="personATotal">$0.00</div>
         </div>
         <div class="card">
-            <h3>Sam's Total</h3>
+            <h3 id="person2TotalLabel">Person 2's Total</h3>
             <div class="card-value" id="personBTotal">$0.00</div>
         </div>
         <div class="card">
@@ -93,35 +94,35 @@
     <!-- Person by Asset Type Breakdown -->
     <section class="summary summary-grid">
         <div class="card">
-            <h3>Dean's Stocks</h3>
+            <h3 id="person1StocksLabel">Person 1's Stocks</h3>
             <div class="card-value" id="deanStocks">$0.00</div>
         </div>
         <div class="card">
-            <h3>Sam's Stocks</h3>
+            <h3 id="person2StocksLabel">Person 2's Stocks</h3>
             <div class="card-value" id="samStocks">$0.00</div>
         </div>
         <div class="card">
-            <h3>Dean's Crypto</h3>
+            <h3 id="person1CryptoLabel">Person 1's Crypto</h3>
             <div class="card-value" id="deanCrypto">$0.00</div>
         </div>
         <div class="card">
-            <h3>Sam's Crypto</h3>
+            <h3 id="person2CryptoLabel">Person 2's Crypto</h3>
             <div class="card-value" id="samCrypto">$0.00</div>
         </div>
         <div class="card">
-            <h3>Dean's Metals</h3>
+            <h3 id="person1MetalsLabel">Person 1's Metals</h3>
             <div class="card-value" id="deanMetals">$0.00</div>
         </div>
         <div class="card">
-            <h3>Sam's Metals</h3>
+            <h3 id="person2MetalsLabel">Person 2's Metals</h3>
             <div class="card-value" id="samMetals">$0.00</div>
         </div>
         <div class="card">
-            <h3>Dean's Savings</h3>
+            <h3 id="person1SavingsLabel">Person 1's Savings</h3>
             <div class="card-value" id="deanSavings">$0.00</div>
         </div>
         <div class="card">
-            <h3>Sam's Savings</h3>
+            <h3 id="person2SavingsLabel">Person 2's Savings</h3>
             <div class="card-value" id="samSavings">$0.00</div>
         </div>
     </section>
@@ -152,8 +153,8 @@
                         <th class="sortable" data-sort="type">Type ⇅</th>
                         <th>Symbol</th>
                         <th class="sortable" data-sort="price">Live Price ⇅</th>
-                        <th colspan="2">Dean</th>
-                        <th colspan="2">Sam</th>
+                        <th colspan="2" id="tableHeader1">Person 1</th>
+                        <th colspan="2" id="tableHeader2">Person 2</th>
                         <th class="sortable" data-sort="combined">Combined Value ⇅</th>
                         <th>% of Portfolio</th>
                         <th>Actions</th>
@@ -214,7 +215,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>Dean's Holdings</h3>
+                    <h3 id="formPerson1Label">Person 1's Holdings</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="p1Qty">Quantity</label>
@@ -233,7 +234,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>Sam's Holdings</h3>
+                    <h3 id="formPerson2Label">Person 2's Holdings</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="p2Qty">Quantity</label>
@@ -254,6 +255,30 @@
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettingsModal">&times;</button>
+            </div>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="person1Name">Person 1 Name:</label>
+                    <input type="text" id="person1Name" required maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="person2Name">Person 2 Name:</label>
+                    <input type="text" id="person2Name" required maxlength="50">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelSettingsBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
                 </div>
             </form>
         </div>

@@ -27,6 +27,7 @@
 
     async function init() {
         loadState();
+        initializeSettings();
         
         setupEventListeners();
         render();
@@ -52,6 +53,43 @@
         localStorage.setItem('portfolio_v1', JSON.stringify(state));
     }
 
+    // Initialize settings with defaults if not present
+    function initializeSettings() {
+        if (!state.settings.people || state.settings.people.length !== 2) {
+            state.settings.people = ['Dean', 'Sam'];
+            saveState();
+        }
+        updateLabels();
+    }
+
+    // Update all labels with current names
+    function updateLabels() {
+        const p1Name = state.settings.people[0];
+        const p2Name = state.settings.people[1];
+        
+        // Summary cards
+        document.getElementById('person1TotalLabel').textContent = `${p1Name}'s Total`;
+        document.getElementById('person2TotalLabel').textContent = `${p2Name}'s Total`;
+        
+        // Asset type breakdown
+        document.getElementById('person1StocksLabel').textContent = `${p1Name}'s Stocks`;
+        document.getElementById('person2StocksLabel').textContent = `${p2Name}'s Stocks`;
+        document.getElementById('person1CryptoLabel').textContent = `${p1Name}'s Crypto`;
+        document.getElementById('person2CryptoLabel').textContent = `${p2Name}'s Crypto`;
+        document.getElementById('person1MetalsLabel').textContent = `${p1Name}'s Metals`;
+        document.getElementById('person2MetalsLabel').textContent = `${p2Name}'s Metals`;
+        document.getElementById('person1SavingsLabel').textContent = `${p1Name}'s Savings`;
+        document.getElementById('person2SavingsLabel').textContent = `${p2Name}'s Savings`;
+        
+        // Table headers
+        document.getElementById('tableHeader1').textContent = p1Name;
+        document.getElementById('tableHeader2').textContent = p2Name;
+        
+        // Form labels
+        document.getElementById('formPerson1Label').textContent = `${p1Name}'s Holdings`;
+        document.getElementById('formPerson2Label').textContent = `${p2Name}'s Holdings`;
+    }
+
     // Event Listeners
     function setupEventListeners() {
         // Header buttons
@@ -61,6 +99,12 @@
             document.getElementById('importFile').click();
         });
         document.getElementById('importFile').addEventListener('change', importData);
+
+        // Settings button
+        document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+        document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
+        document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettingsModal);
+        document.getElementById('settingsForm').addEventListener('submit', saveSettings);
 
         // Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -176,6 +220,36 @@
     function closeModal() {
         document.getElementById('assetModal').classList.remove('active');
         hideAutocomplete();
+    }
+
+    // Settings Modal Functions
+    function openSettingsModal() {
+        document.getElementById('person1Name').value = state.settings.people[0];
+        document.getElementById('person2Name').value = state.settings.people[1];
+        document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function closeSettingsModal() {
+        document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    function saveSettings(e) {
+        e.preventDefault();
+        
+        const person1 = document.getElementById('person1Name').value.trim();
+        const person2 = document.getElementById('person2Name').value.trim();
+        
+        if (!person1 || !person2) {
+            alert('Please enter names for both people');
+            return;
+        }
+        
+        state.settings.people = [person1, person2];
+        saveState();
+        updateLabels();
+        closeSettingsModal();
+        
+        alert('Settings saved successfully!');
     }
 
     // Symbol Autocomplete Functions
