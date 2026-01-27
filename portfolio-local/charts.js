@@ -268,12 +268,20 @@
             const changePercent = state.priceCache.changePercents ? state.priceCache.changePercents[cacheKey] : 0;
 
             if (currentPrice && changePercent !== undefined && changePercent !== null) {
+                // Calculate total quantity and value
+                const p1Qty = asset.holdings?.p1?.qty || 0;
+                const p2Qty = asset.holdings?.p2?.qty || 0;
+                const totalQty = p1Qty + p2Qty;
+                const totalValue = totalQty * currentPrice;
+
                 performers.push({
                     name: asset.name,
                     symbol: asset.symbol,
                     type: asset.type,
                     currentPrice: currentPrice,
-                    changePercent: changePercent
+                    changePercent: changePercent,
+                    quantity: totalQty,
+                    value: totalValue
                 });
             }
         });
@@ -291,6 +299,10 @@
                     <span class="performer-symbol">${p.symbol.toUpperCase()}</span>
                     <span class="performer-type">${p.type}</span>
                 </div>
+                <div class="performer-holdings">
+                    <span class="performer-quantity">Qty: ${p.quantity.toFixed(4)}</span>
+                    <span class="performer-value">Value: $${p.value.toFixed(2)}</span>
+                </div>
                 <div class="performer-stats">
                     <span class="performer-price">$${p.currentPrice.toFixed(2)}</span>
                     <span class="performer-change positive">+${p.changePercent.toFixed(2)}%</span>
@@ -307,6 +319,10 @@
                     <span class="performer-name">${p.name}</span>
                     <span class="performer-symbol">${p.symbol.toUpperCase()}</span>
                     <span class="performer-type">${p.type}</span>
+                </div>
+                <div class="performer-holdings">
+                    <span class="performer-quantity">Qty: ${p.quantity.toFixed(4)}</span>
+                    <span class="performer-value">Value: $${p.value.toFixed(2)}</span>
                 </div>
                 <div class="performer-stats">
                     <span class="performer-price">$${p.currentPrice.toFixed(2)}</span>
