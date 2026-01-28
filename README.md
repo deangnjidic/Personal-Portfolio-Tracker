@@ -5,8 +5,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Made with Vanilla JS](https://img.shields.io/badge/Made%20with-Vanilla%20JS-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![No Dependencies](https://img.shields.io/badge/Dependencies-None-green.svg)]()
+![Visitors](https://api.visitorbadge.io/api/visitors?path=deangnjidic%2FPersonal-Portfolio-Tracker&label=Visitors&countColor=%23263759)
 
-[🚀 Live Demo](https://your-username.github.io/Personal-Portfolio-Tracker/) | [📖 Documentation](#usage) | [🐛 Report Bug](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues) | [💡 Request Feature](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues)
+[🚀 Live Demo](https://deangnjidic.github.io/Personal-Portfolio-Tracker/) | [📖 Documentation](#usage) | [🐛 Report Bug](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues) | [💡 Request Feature](https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/dekara)
 
 ---
 
@@ -56,14 +59,14 @@ Track your entire investment portfolio in one place:
 ## 🚀 Quick Start
 
 ### Option 1: Online (Easiest)
-Visit the [live demo](https://your-username.github.io/Personal-Portfolio-Tracker/) and start tracking immediately!
+Visit the [live demo](https://deangnjidic.github.io/Personal-Portfolio-Tracker/) and start tracking immediately!
 
 ### Option 2: Local Installation
 
 1. **Download or Clone**
    ```bash
    git clone https://github.com/deangnjidic/Personal-Portfolio-Tracker.git
-   cd Personal-Portfolio-Tracker/portfolio-local
+   cd Personal-Portfolio-Tracker
    ```
 
 2. **Get Free API Keys**
@@ -241,7 +244,7 @@ If this project helped you, consider:
 - ⭐ **Starring** the repository
 - 🐛 **Reporting bugs** or suggesting features
 - 🤝 **Contributing** code or documentation
-- ☕ **Buying me a coffee** (optional, never required!)
+- ☕ **[Buying me a coffee](https://ko-fi.com/dekara)** on Ko-fi (optional, never required!)
 
 ---
 
