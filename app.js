@@ -46,7 +46,137 @@
             } catch (e) {
                 console.error('Failed to parse stored data:', e);
             }
+        } else {
+            // Load demo data for first-time visitors
+            loadDemoData();
         }
+    }
+
+    // Demo data for first-time visitors (GitHub Pages demo)
+    function loadDemoData() {
+        state.assets = [
+            {
+                id: 'demo_1',
+                type: 'stock',
+                symbol: 'AAPL',
+                name: 'Apple Inc.',
+                holdings: {
+                    p1: { qty: 10, avgCost: 150, dividend: 0 },
+                    p2: { qty: 5, avgCost: 160, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_2',
+                type: 'stock',
+                symbol: 'MSFT',
+                name: 'Microsoft',
+                holdings: {
+                    p1: { qty: 8, avgCost: 300, dividend: 0 },
+                    p2: { qty: 12, avgCost: 280, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_3',
+                type: 'stock',
+                symbol: 'TSLA',
+                name: 'Tesla',
+                holdings: {
+                    p1: { qty: 15, avgCost: 200, dividend: 0 },
+                    p2: { qty: 0, avgCost: 0, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_4',
+                type: 'crypto',
+                symbol: 'BINANCE:BTCUSDT',
+                name: 'Bitcoin',
+                holdings: {
+                    p1: { qty: 0.5, avgCost: 45000, dividend: 0 },
+                    p2: { qty: 0.25, avgCost: 48000, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_5',
+                type: 'crypto',
+                symbol: 'BINANCE:ETHUSDT',
+                name: 'Ethereum',
+                holdings: {
+                    p1: { qty: 5, avgCost: 2500, dividend: 0 },
+                    p2: { qty: 3, avgCost: 2800, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_6',
+                type: 'metal',
+                symbol: 'gold',
+                name: 'Gold',
+                unit: 'oz',
+                holdings: {
+                    p1: { qty: 10, avgCost: 1800, dividend: 0 },
+                    p2: { qty: 8, avgCost: 1850, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_7',
+                type: 'metal',
+                symbol: 'silver',
+                name: 'Silver',
+                unit: 'oz',
+                holdings: {
+                    p1: { qty: 100, avgCost: 22, dividend: 0 },
+                    p2: { qty: 50, avgCost: 24, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_8',
+                type: 'savings',
+                symbol: 'USD',
+                name: 'US Dollar Savings',
+                holdings: {
+                    p1: { qty: 5000, avgCost: 1, dividend: 0 },
+                    p2: { qty: 7500, avgCost: 1, dividend: 0 }
+                }
+            }
+        ];
+
+        // Add demo prices to cache
+        state.priceCache = {
+            lastUpdated: Date.now(),
+            prices: {
+                'stock:AAPL': 178.50,
+                'stock:MSFT': 415.20,
+                'stock:TSLA': 245.80,
+                'crypto:BINANCE:BTCUSDT': 52500.00,
+                'crypto:BINANCE:ETHUSDT': 3100.00,
+                'metal:gold': 2050.00,
+                'metal:silver': 25.50,
+                'savings:USD': 1.00
+            },
+            previousPrices: {
+                'stock:AAPL': 176.20,
+                'stock:MSFT': 410.50,
+                'stock:TSLA': 238.90,
+                'crypto:BINANCE:BTCUSDT': 51000.00,
+                'crypto:BINANCE:ETHUSDT': 3050.00,
+                'metal:gold': 2040.00,
+                'metal:silver': 25.20,
+                'savings:USD': 1.00
+            },
+            changePercents: {
+                'stock:AAPL': 1.31,
+                'stock:MSFT': 1.15,
+                'stock:TSLA': 2.89,
+                'crypto:BINANCE:BTCUSDT': 2.94,
+                'crypto:BINANCE:ETHUSDT': 1.64,
+                'metal:gold': 0.49,
+                'metal:silver': 1.19,
+                'savings:USD': 0.00
+            }
+        };
+        
+        // Save demo data to localStorage
+        saveState();
+        console.log('Demo data loaded with', state.assets.length, 'assets');
     }
 
     function saveState() {
