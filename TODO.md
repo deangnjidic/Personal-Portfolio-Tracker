@@ -1,18 +1,23 @@
 # 📋 TODO List - Free Portfolio Tracker
 
 ## 🎨 User Experience
-- [ ] **Add loading states and better UX feedback** - Spinners, progress bars, better error messages
-- [ ] **Create favicon and app icons** - Add branding assets
+- [x] **Add loading states and better UX feedback** - Spinners, progress bars, better error messages
+- [x] **Create favicon and app icons** - Add branding assets
 - [ ] **Add social media meta tags** - OG tags, Twitter cards for sharing
 - [ ] **Test on multiple browsers and devices** - Chrome, Firefox, Safari, Edge, mobile
+- [ ] **Make site responsive** - Improve mobile/tablet layouts across all pages
+
+## 📄 Additional Pages
+- [ ] **Create FAQ page** - Answer common questions (API keys, pricing, data privacy, browser support, etc.)
+- [ ] **Create About page** - Project story, technology stack, why it exists
+- [ ] **Create Changelog HTML page** - Prettier version of CHANGELOG.md for users
+- [ ] **Create Roadmap page** - Planned features and upcoming improvements (optional)
+- [ ] **Create Contact/Support page** - Centralized support channels (optional)
 
 ## 📊 Production Optimization
-- [x] **Replace GTM ID** - Updated to GTM-PWHJ9WLH
 - [ ] **Minify CSS and JS** - Follow MINIFY-INSTRUCTIONS.md before deployment
 
 ## 🚀 Deployment Checklist
-- [x] Google Analytics ID configured (G-X00WL6B8W3)
-- [x] Replace Google Tag Manager ID (GTM-PWHJ9WLH)
 - [ ] Run minification (see MINIFY-INSTRUCTIONS.md)
 - [ ] Set up GitHub Actions for automated deployment
 - [ ] Configure custom domain (if applicable)

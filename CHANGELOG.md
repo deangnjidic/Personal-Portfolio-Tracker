@@ -11,6 +11,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.14.0] - 2026-01-29
+
+### Added
+- Professional favicon and app icons (favicon.svg, icon-192.png)
+- UI feedback utilities library (ui-feedback.js) with toast notifications, loading overlays, and progress bars
+- Logo in app header with link back to landing page
+- Smooth animations and transitions throughout entire app
+- Modal slide-in animations
+- Button hover effects with lift and shadow
+- Table row hover effects with slide animation
+- Stat card hover effects
+- Comprehensive UI/UX documentation (UI-ENHANCEMENTS-DOCS.md)
+
+### Enhanced
+- Smooth scrolling behavior across all pages
+- Button interactions now have subtle lift effect and shadows on hover
+- All interactive elements have smooth 0.2s transitions
+- Modals animate in with fade and scale effect
+- Portfolio table rows slide slightly on hover for better feedback
+- Summary stat cards lift and highlight on hover
+
+### Changed
+- Header logo now clickable and returns to landing page
+- Refresh button maintains simple disabled state (no spinner overlay)
+- Status messages remain in left sidebar (removed redundant toast notifications)
+
+### Performance
+- All animations use CSS transitions for optimal performance
+- Minimal JavaScript overhead for UI feedback system
+- Lazy initialization of toast notification container
+
+---
+
 ## [1.13.0] - 2026-01-29
 
 ### Added

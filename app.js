@@ -907,9 +907,9 @@
             statusEl.textContent = 'Error refreshing prices';
         }
 
-        btn.disabled = false;
+        UIFeedback.setButtonLoading(btn, false);
         btn.textContent = 'Refresh Prices';
-        render();
+        btn.disabled = false
     }
 
     // Helper: Add delay between API calls to avoid rate limiting
