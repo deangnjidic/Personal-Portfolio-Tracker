@@ -47,6 +47,7 @@ Track your entire investment portfolio in one place:
 - **Offline Capable** - Works without internet after initial load
 
 ### 🛠️ **Power User Features**
+- **Smart Symbol Search** - Real-time autocomplete for stocks/crypto with keyboard navigation
 - **Import/Export** - Backup and restore as JSON
 - **CSV Import** - Bulk import from M1 Finance or custom CSV
 - **Search & Filter** - Find assets instantly
@@ -265,14 +266,19 @@ If this project helped you, consider:
 
 1. Click "Add Asset"
 2. Select type (Stock/Crypto/Metal/Savings)
-3. Enter asset details:
-   - **Stock**: Use ticker symbol (e.g., AAPL, MSFT, GOOGL)
-   - **Crypto**: Use Finnhub format (e.g., BINANCE:BTCUSDT, BINANCE:ETHUSDT)
+3. **🔍 Smart Symbol Search**: Start typing in the Symbol field to get auto-suggestions
+   - **Real-time search** powered by Finnhub API
+   - **Keyboard navigation**: Use ↑↓ arrow keys and Enter to select
+   - Works for both stocks and cryptocurrencies
+   - Shows company name and ticker symbol
+4. Enter asset details:
+   - **Stock**: Use ticker symbol (e.g., AAPL, MSFT, GOOGL) or search by typing
+   - **Crypto**: Use Finnhub format (e.g., BINANCE:BTCUSDT, BINANCE:ETHUSDT) or search
    - **Metal**: Use metal name (gold, silver, platinum, palladium)
    - **Savings**: Use currency code (USD, EUR, etc.)
-4. Enter holdings for Dean and Sam (quantity + average cost)
-5. Optional: Add dividend information for stocks
-6. Click Save
+5. Enter holdings for Dean and Sam (quantity + average cost)
+6. Optional: Add dividend information for stocks
+7. Click Save
 
 ### Refreshing Prices
 

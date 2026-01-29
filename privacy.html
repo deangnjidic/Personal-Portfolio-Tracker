@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Free Portfolio Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .privacy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .privacy-hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border-radius: 12px;
+            border: 1px solid #30363d;
+        }
+
+        .privacy-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #e6edf3;
+        }
+
+        .privacy-hero p {
+            font-size: 18px;
+            color: #8b949e;
+        }
+
+        .privacy-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #161b22;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        .privacy-section h2 {
+            color: #58a6ff;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .privacy-section h3 {
+            color: #e6edf3;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-section p {
+            color: #8b949e;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .privacy-section ul {
+            color: #8b949e;
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+
+        .privacy-section li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 4px solid #58a6ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #58a6ff;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .back-link a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 30px;
+            border: 2px solid #58a6ff;
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            background: rgba(88, 166, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        code {
+            background: #0d1117;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #79c0ff;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="privacy-container">
+        <!-- Hero Section -->
+        <div class="privacy-hero">
+            <h1>🔒 Privacy Policy</h1>
+            <p>Your privacy is our top priority. Learn how Free Portfolio Tracker handles your data.</p>
+        </div>
+
+        <!-- Introduction -->
+        <section class="privacy-section">
+            <h2>Our Commitment to Privacy</h2>
+            <div class="highlight-box">
+                <strong>100% Privacy-First:</strong> Free Portfolio Tracker is designed with privacy at its core. All your data stays on your device. We never collect, transmit, or store any of your personal information or portfolio data on our servers.
+            </div>
+            <p>Last Updated: January 29, 2026</p>
+        </section>
+
+        <!-- Data Storage -->
+        <section class="privacy-section">
+            <h2>📦 How Your Data is Stored</h2>
+            
+            <h3>Local Storage Only</h3>
+            <p>Free Portfolio Tracker stores all data locally in your browser using <code>localStorage</code>. This means:</p>
+            <ul>
+                <li><strong>Your data never leaves your device</strong> - Everything is stored in your browser's local storage</li>
+                <li><strong>No server communication</strong> - We don't have any backend servers collecting your data</li>
+                <li><strong>No cloud sync</strong> - Your portfolio data is not synced to any cloud service</li>
+                <li><strong>Complete control</strong> - You can export, backup, or delete your data at any time</li>
+            </ul>
+
+            <h3>What Data is Stored</h3>
+            <p>The following information is stored locally on your device:</p>
+            <ul>
+                <li>Portfolio assets (stocks, crypto, metals, savings accounts)</li>
+                <li>Holdings quantities and average costs</li>
+                <li>Person names you configure (default: "John" and "Maria")</li>
+                <li>Your API keys (Finnhub, Metals.dev) - stored encrypted in your browser</li>
+                <li>Currency preference (default: USD)</li>
+                <li>Historical portfolio snapshots (if you use the history feature)</li>
+                <li>Price cache (temporary, refreshes every 5 minutes)</li>
+            </ul>
+
+            <h3>Data Persistence</h3>
+            <p>Your data persists in your browser's localStorage until:</p>
+            <ul>
+                <li>You manually clear your browser data</li>
+                <li>You delete the app data using the "Clear All Data" button</li>
+                <li>You uninstall or reset your browser</li>
+            </ul>
+        </section>
+
+        <!-- External Services -->
+        <section class="privacy-section">
+            <h2>🌐 External API Services</h2>
+            
+            <p>Free Portfolio Tracker uses third-party APIs to fetch real-time market prices. These services may collect data about API requests:</p>
+            
+            <h3>Finnhub Stock API</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Fetch stock and crypto prices</li>
+                <li><strong>Data Sent:</strong> Stock/crypto symbols, your API key</li>
+                <li><strong>Privacy Policy:</strong> <a href="https://finnhub.io/privacy-policy" target="_blank">https://finnhub.io/privacy-policy</a></li>
+                <li><strong>Your Control:</strong> You provide your own API key; we don't control their data practices</li>
+            </ul>
+
+            <h3>Metals.dev API</h3>
+            <ul>
+                <li><strong>Purpose:</strong> Fetch precious metal prices (gold, silver, platinum)</li>
+                <li><strong>Data Sent:</strong> Metal symbols, your API key</li>
+                <li><strong>Privacy Policy:</strong> <a href="https://metals.dev/privacy" target="_blank">https://metals.dev/privacy</a></li>
+                <li><strong>Your Control:</strong> Optional - only used if you track precious metals</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>Important:</strong> We do not control how these third-party services handle your API requests. Please review their respective privacy policies if you have concerns about API usage tracking.
+            </div>
+        </section>
+
+        <!-- No Tracking -->
+        <section class="privacy-section">
+            <h2>🚫 What We DON'T Collect</h2>
+            
+            <p>Free Portfolio Tracker does not collect, transmit, or store:</p>
+            <ul>
+                <li>❌ Personal identification information (name, email, phone, address)</li>
+                <li>❌ Portfolio holdings or asset values</li>
+                <li>❌ Financial transaction data</li>
+                <li>❌ Cookies or tracking pixels</li>
+                <li>❌ Analytics or usage statistics</li>
+                <li>❌ IP addresses or device information</li>
+                <li>❌ Location data</li>
+                <li>❌ Any data transmitted to our servers (we don't have servers!)</li>
+            </ul>
+        </section>
+
+        <!-- Data Security -->
+        <section class="privacy-section">
+            <h2>🛡️ Security Measures</h2>
+            
+            <h3>Client-Side Security</h3>
+            <ul>
+                <li><strong>XSS Protection:</strong> All user inputs are sanitized to prevent cross-site scripting attacks</li>
+                <li><strong>No SQL Injection:</strong> We don't use databases - no SQL injection vulnerabilities</li>
+                <li><strong>API Key Protection:</strong> API keys are stored in browser's localStorage (not visible in page source)</li>
+                <li><strong>HTTPS Required:</strong> Always access the app over HTTPS for encrypted communication with APIs</li>
+            </ul>
+
+            <h3>Best Practices for Users</h3>
+            <ul>
+                <li>🔐 Don't share your API keys with anyone</li>
+                <li>🔄 Regularly export backups of your portfolio data</li>
+                <li>🖥️ Use the app on trusted devices only</li>
+                <li>🔒 Lock your device when not in use</li>
+                <li>⚠️ Clear browser data if using a shared/public computer</li>
+            </ul>
+        </section>
+
+        <!-- Your Rights -->
+        <section class="privacy-section">
+            <h2>✅ Your Rights and Control</h2>
+            
+            <p>You have complete control over your data:</p>
+            <ul>
+                <li><strong>Export Your Data:</strong> Use the "Export as JSON" feature to download all your data</li>
+                <li><strong>Delete Your Data:</strong> Use "Clear All Data" in settings to permanently delete all local data</li>
+                <li><strong>Data Portability:</strong> Exported JSON can be imported into other tools or saved as backup</li>
+                <li><strong>No Account Required:</strong> No registration, no account, no emails - complete anonymity</li>
+            </ul>
+        </section>
+
+        <!-- Open Source -->
+        <section class="privacy-section">
+            <h2>🔓 Open Source Transparency</h2>
+            
+            <p>Free Portfolio Tracker is fully open source under the CC BY-NC-SA 4.0 license:</p>
+            <ul>
+                <li>📂 <strong>Source Code:</strong> <a href="https://github.com/deangnjidic/Personal-Portfolio-Tracker" target="_blank">View on GitHub</a></li>
+                <li>🔍 <strong>Audit the Code:</strong> Anyone can review our code to verify privacy claims</li>
+                <li>🤝 <strong>Community Trust:</strong> Open source ensures accountability and transparency</li>
+                <li>🚫 <strong>Non-Commercial:</strong> This app cannot be resold or used commercially without permission</li>
+            </ul>
+        </section>
+
+        <!-- Updates -->
+        <section class="privacy-section">
+            <h2>📝 Policy Updates</h2>
+            
+            <p>We may update this privacy policy from time to time. Changes will be reflected on this page with an updated "Last Updated" date. Since we don't collect email addresses, we cannot notify you of changes. Please check this page periodically.</p>
+        </section>
+
+        <!-- Contact -->
+        <section class="privacy-section">
+            <h2>📬 Questions or Concerns?</h2>
+            
+            <p>If you have questions about this privacy policy or how Free Portfolio Tracker handles data:</p>
+            <ul>
+                <li>📧 Open an issue on <a href="https://github.com/deangnjidic/Personal-Portfolio-Tracker/issues" target="_blank">GitHub</a></li>
+                <li>💬 Review the code yourself - it's fully open source!</li>
+                <li>⭐ Star the project if you appreciate the privacy-first approach</li>
+            </ul>
+        </section>
+
+        <!-- Back Link -->
+        <div class="back-link">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

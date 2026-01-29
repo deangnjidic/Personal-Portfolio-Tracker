@@ -1,22 +1,20 @@
-# 📋 TODO List - Public Release Preparation
+# 📋 TODO List - Free Portfolio Tracker
 
-## 🏗️ Core Restructuring (High Priority)
-- [ ] **Create new homepage (landing page)** - Add an attractive landing page explaining the app
-- [ ] **Rename index.html to app.html** - Move current dashboard to app.html
-- [ ] **Update all navigation links** - Update references from index.html to app.html in all files
-
-## ✨ New Features
-- [ ] **Add API to pull more news sources** - Integrate additional news APIs beyond Finnhub
-  - Consider: NewsAPI, Alpha Vantage, Polygon.io
-  - Add news source filter/selector
-  - Cache news from multiple sources
+## ✅ Completed
+- [x] **Create new homepage (landing page)** - Landing page created with hero section
+- [x] **Rename index.html to app.html** - Dashboard moved to app.html
+- [x] **Update all navigation links** - References updated across all files
+- [x] **Rename to Free Portfolio Tracker** - Updated throughout all files
+- [x] **Update Buy Me a Coffee link** - Link updated to https://buymeacoffee.com/deangnj
+- [x] **Update LICENSE** - Changed to CC BY-NC-SA 4.0 (non-commercial)
+- [x] **Remove deprecated features** - Removed Charts, News, and Compare pages from docs
 
 ## 🔒 Production Readiness
-- [ ] **Add error handling for missing API keys** - Graceful degradation when APIs aren't configured
-- [ ] **Add privacy policy page** - Create privacy.html explaining data storage
-- [ ] **Optimize demo data for first-time users** - Better sample portfolio data
-- [ ] **Security audit** - Check for XSS vulnerabilities, sanitize inputs
-- [ ] **Add rate limiting protection** - Prevent API quota exhaustion
+- [x] **Add error handling for missing API keys** - Graceful degradation with user-friendly messages
+- [x] **Add privacy policy page** - Created privacy.html with comprehensive privacy information
+- [x] **Optimize demo data for first-time users** - Enhanced with realistic diversified portfolio
+- [x] **Security audit** - Added XSS protection, input sanitization, HTML escaping
+- [x] **Add rate limiting protection** - Implemented rate limiter for API calls
 
 ## 🎨 User Experience
 - [ ] **Add loading states and better UX feedback** - Spinners, progress bars, better error messages
@@ -47,3 +45,4 @@
 - Maintain privacy-first approach (no tracking/analytics unless optional)
 - Ensure offline functionality after first load
 - API keys should never be committed to git
+- CC BY-NC-SA 4.0 license prohibits commercial use/resale

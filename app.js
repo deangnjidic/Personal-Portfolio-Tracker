@@ -2,6 +2,45 @@
 (function() {
     'use strict';
 
+    // Security: HTML escape utility to prevent XSS
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Rate limiting for API calls
+    const rateLimiter = {
+        calls: new Map(), // key: api_name, value: { count, resetTime }
+        limits: {
+            finnhub: { max: 60, window: 60000 }, // 60 calls per minute
+            metals: { max: 100, window: 60000 },
+            coingecko: { max: 50, window: 60000 }
+        },
+        canMakeCall(apiName) {
+            const limit = this.limits[apiName];
+            if (!limit) return true;
+            
+            const now = Date.now();
+            const record = this.calls.get(apiName) || { count: 0, resetTime: now + limit.window };
+            
+            if (now > record.resetTime) {
+                record.count = 0;
+                record.resetTime = now + limit.window;
+            }
+            
+            if (record.count >= limit.max) {
+                console.warn(`Rate limit reached for ${apiName}. Try again in ${Math.ceil((record.resetTime - now) / 1000)}s`);
+                return false;
+            }
+            
+            record.count++;
+            this.calls.set(apiName, record);
+            return true;
+        }
+    };
+
     // State
     let state = {
         settings: {
@@ -56,7 +95,7 @@
         }
     }
 
-    // Demo data for first-time visitors (GitHub Pages demo)
+    // Demo data for first-time visitors - Realistic diversified portfolio
     function loadDemoData() {
         state.assets = [
             {
@@ -65,38 +104,68 @@
                 symbol: 'AAPL',
                 name: 'Apple Inc.',
                 holdings: {
-                    p1: { qty: 10, avgCost: 150, dividend: 0 },
-                    p2: { qty: 5, avgCost: 160, dividend: 0 }
+                    p1: { qty: 25, avgCost: 145, dividend: 24 },
+                    p2: { qty: 15, avgCost: 160, dividend: 15 }
                 }
             },
             {
                 id: 'demo_2',
                 type: 'stock',
                 symbol: 'MSFT',
-                name: 'Microsoft',
+                name: 'Microsoft Corporation',
                 holdings: {
-                    p1: { qty: 8, avgCost: 300, dividend: 0 },
-                    p2: { qty: 12, avgCost: 280, dividend: 0 }
+                    p1: { qty: 20, avgCost: 280, dividend: 68 },
+                    p2: { qty: 18, avgCost: 295, dividend: 60 }
                 }
             },
             {
                 id: 'demo_3',
                 type: 'stock',
-                symbol: 'TSLA',
-                name: 'Tesla',
+                symbol: 'GOOGL',
+                name: 'Alphabet Inc.',
                 holdings: {
-                    p1: { qty: 15, avgCost: 200, dividend: 0 },
-                    p2: { qty: 0, avgCost: 0, dividend: 0 }
+                    p1: { qty: 30, avgCost: 125, dividend: 0 },
+                    p2: { qty: 25, avgCost: 135, dividend: 0 }
                 }
             },
             {
                 id: 'demo_4',
+                type: 'stock',
+                symbol: 'JNJ',
+                name: 'Johnson & Johnson',
+                holdings: {
+                    p1: { qty: 40, avgCost: 155, dividend: 120 },
+                    p2: { qty: 35, avgCost: 160, dividend: 105 }
+                }
+            },
+            {
+                id: 'demo_5',
                 type: 'crypto',
                 symbol: 'BINANCE:BTCUSDT',
                 name: 'Bitcoin',
                 holdings: {
-                    p1: { qty: 0.5, avgCost: 45000, dividend: 0 },
-                    p2: { qty: 0.25, avgCost: 48000, dividend: 0 }
+                    p1: { qty: 0.15, avgCost: 42000, dividend: 0 },
+                    p2: { qty: 0.10, avgCost: 45000, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_6',
+                type: 'crypto',
+                symbol: 'BINANCE:ETHUSDT',
+                name: 'Ethereum',
+                holdings: {
+                    p1: { qty: 2.5, avgCost: 2800, dividend: 0 },
+                    p2: { qty: 1.8, avgCost: 3000, dividend: 0 }
+                }
+            },
+            {
+                id: 'demo_7',
+                type: 'savings',
+                symbol: 'SAVINGS-USD',
+                name: 'High-Yield Savings Account',
+                holdings: {
+                    p1: { qty: 15000, avgCost: 1, dividend: 0 },
+                    p2: { qty: 12000, avgCost: 1, dividend: 0 }
                 }
             },
             {
@@ -300,8 +369,54 @@
         // Symbol autocomplete
         const symbolInput = document.getElementById('assetSymbol');
         let autocompleteTimeout;
+        let selectedIndex = -1;
+        
+        // Show hint when field is focused
+        symbolInput.addEventListener('focus', () => {
+            if (symbolInput.value.trim().length === 0) {
+                const dropdown = document.getElementById('symbolAutocomplete');
+                dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 12px; cursor: default; background: rgba(88, 166, 255, 0.05); border-left: 3px solid #58a6ff;">💡 <strong>Tip:</strong> Start typing a company name or ticker symbol to search</div>';
+                dropdown.style.display = 'block';
+            }
+        });
+        
+        // Keyboard navigation for autocomplete
+        symbolInput.addEventListener('keydown', (e) => {
+            const dropdown = document.getElementById('symbolAutocomplete');
+            const items = dropdown.querySelectorAll('.autocomplete-item[data-symbol]');
+            
+            if (items.length === 0) return;
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                updateSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection(items);
+            } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                e.preventDefault();
+                items[selectedIndex].click();
+            } else if (e.key === 'Escape') {
+                hideAutocomplete();
+            }
+        });
+        
+        function updateSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedIndex) {
+                    item.style.background = '#21262d';
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.style.background = '';
+                }
+            });
+        }
+        
         symbolInput.addEventListener('input', (e) => {
             clearTimeout(autocompleteTimeout);
+            selectedIndex = -1; // Reset selection on new input
             const query = e.target.value.trim();
             
             if (query.length < 1) {
@@ -417,6 +532,7 @@
         saveState();
         updateLabels();
         closeSettingsModal();
+        checkApiKeySetup(); // Update banner visibility
         
         alert('Settings saved successfully! API keys are now stored locally.');
     }
@@ -433,7 +549,21 @@
 
         const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
         if (!apiKey || apiKey === 'PASTE_KEY_HERE') {
-            console.log('Finnhub API key not configured for symbol search');
+            console.log('Finnhub API key not configured - symbol search disabled');
+            // Show user-friendly message
+            const dropdown = document.getElementById('symbolAutocomplete');
+            dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 10px; color: #f85149; cursor: default;">⚠️ API key required for symbol search. Configure in Settings.</div>';
+            dropdown.style.display = 'block';
+            setTimeout(() => hideAutocomplete(), 3000);
+            return;
+        }
+
+        // Check rate limit
+        if (!rateLimiter.canMakeCall('finnhub')) {
+            const dropdown = document.getElementById('symbolAutocomplete');
+            dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 10px; color: #f85149; cursor: default;">⏱️ Rate limit reached. Please wait a moment.</div>';
+            dropdown.style.display = 'block';
+            setTimeout(() => hideAutocomplete(), 3000);
             return;
         }
 
@@ -442,6 +572,29 @@
             const response = await fetch(url);
             
             if (!response.ok) {
+                // Handle specific error codes
+                if (response.status === 401) {
+                    const dropdown = document.getElementById('symbolAutocomplete');
+                    dropdown.innerHTML = `
+                        <div class="autocomplete-item" style="padding: 15px; cursor: default; background: rgba(248, 81, 73, 0.1); border-left: 3px solid #f85149;">
+                            <div style="color: #f85149; font-weight: 600; margin-bottom: 8px;">🔑 Invalid API Key</div>
+                            <div style="color: #8b949e; font-size: 12px; line-height: 1.5;">
+                                Your Finnhub API key is invalid or missing.<br>
+                                1. Get a free key at <a href="https://finnhub.io/register" target="_blank" style="color: #58a6ff;">finnhub.io</a><br>
+                                2. Open Settings (⚙️) and paste your key
+                            </div>
+                        </div>
+                    `;
+                    dropdown.style.display = 'block';
+                    setTimeout(() => hideAutocomplete(), 8000);
+                    return;
+                } else if (response.status === 429) {
+                    const dropdown = document.getElementById('symbolAutocomplete');
+                    dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 10px; color: #f85149; cursor: default;">⏱️ Rate limit reached. Please wait a moment.</div>';
+                    dropdown.style.display = 'block';
+                    setTimeout(() => hideAutocomplete(), 3000);
+                    return;
+                }
                 throw new Error(`API error: ${response.status}`);
             }
 
@@ -449,7 +602,14 @@
             displayAutocomplete(data.result || [], query);
         } catch (error) {
             console.error('Symbol search error:', error);
-            hideAutocomplete();
+            const dropdown = document.getElementById('symbolAutocomplete');
+            dropdown.innerHTML = `
+                <div class="autocomplete-item" style="padding: 10px; cursor: default; color: #f85149;">
+                    ❌ Search failed. Please check your API key in Settings.
+                </div>
+            `;
+            dropdown.style.display = 'block';
+            setTimeout(() => hideAutocomplete(), 4000);
         }
     }
 
@@ -458,7 +618,9 @@
         const type = document.getElementById('assetType').value;
         
         if (results.length === 0) {
-            hideAutocomplete();
+            dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 10px; cursor: default; color: #8b949e;">🔍 No results found for "' + escapeHtml(query) + '". Try a different search.</div>';
+            dropdown.style.display = 'block';
+            setTimeout(() => hideAutocomplete(), 3000);
             return;
         }
 
@@ -475,19 +637,24 @@
         filtered = filtered.slice(0, 10); // Limit to 10 results
 
         if (filtered.length === 0) {
-            hideAutocomplete();
+            dropdown.innerHTML = '<div class="autocomplete-item" style="padding: 10px; cursor: default; color: #8b949e;">No ' + type + ' symbols found. Try searching differently.</div>';
+            dropdown.style.display = 'block';
+            setTimeout(() => hideAutocomplete(), 3000);
             return;
         }
 
-        dropdown.innerHTML = filtered.map(result => `
-            <div class="autocomplete-item" data-symbol="${result.symbol}" data-name="${result.description}">
-                <div class="autocomplete-symbol">${result.symbol}</div>
-                <div class="autocomplete-name">${result.description}</div>
+        // Add header showing result count
+        const headerHtml = '<div class="autocomplete-item" style="background: rgba(88, 166, 255, 0.1); cursor: default; font-weight: 600; color: #58a6ff; border-bottom: 2px solid #30363d;">📋 Found ' + filtered.length + ' result' + (filtered.length > 1 ? 's' : '') + ' - Click to select</div>';
+        
+        dropdown.innerHTML = headerHtml + filtered.map(result => `
+            <div class="autocomplete-item" data-symbol="${escapeHtml(result.symbol)}" data-name="${escapeHtml(result.description)}">
+                <div class="autocomplete-symbol">${escapeHtml(result.symbol)}</div>
+                <div class="autocomplete-name">${escapeHtml(result.description)}</div>
             </div>
         `).join('');
 
-        // Add click handlers
-        dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+        // Add click handlers (skip header)
+        dropdown.querySelectorAll('.autocomplete-item[data-symbol]').forEach(item => {
             item.addEventListener('click', () => {
                 const symbol = item.dataset.symbol;
                 const name = item.dataset.name;
@@ -755,7 +922,8 @@
         const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
 
         if (!apiKey || apiKey === 'PASTE_KEY_HERE') {
-            console.warn('Finnhub API key not configured');
+            console.warn('⚠️ Finnhub API key not configured. Stock prices will not update.');
+            console.warn('💡 Add your API key in Settings to enable price updates.');
             return prices;
         }
 
@@ -813,7 +981,8 @@
         const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
 
         if (!apiKey || apiKey === 'PASTE_KEY_HERE') {
-            console.warn('Finnhub API key not configured');
+            console.warn('⚠️ Finnhub API key not configured. Crypto prices will not update.');
+            console.warn('💡 Add your API key in Settings to enable price updates.');
             return prices;
         }
 
@@ -1052,6 +1221,21 @@
         renderTable();
         renderLastUpdated();
         renderQuickStats();
+        checkApiKeySetup();
+    }
+
+    function checkApiKeySetup() {
+        const apiKey = window.APP_CONFIG?.FINNHUB_KEY;
+        const banner = document.getElementById('apiKeyBanner');
+        
+        if (!banner) return;
+        
+        // Show banner if API key is not configured
+        if (!apiKey || apiKey === 'YOUR_FINNHUB_API_KEY_HERE' || apiKey === 'PASTE_KEY_HERE') {
+            banner.style.display = 'block';
+        } else {
+            banner.style.display = 'none';
+        }
     }
 
     function renderSummary() {
@@ -1163,9 +1347,9 @@
 
             return `
                 <tr>
-                    <td class="asset-name">${asset.name}</td>
-                    <td class="asset-type">${asset.type}</td>
-                    <td>${asset.symbol}</td>
+                    <td class="asset-name">${escapeHtml(asset.name)}</td>
+                    <td class="asset-type">${escapeHtml(asset.type)}</td>
+                    <td>${escapeHtml(asset.symbol)}</td>
                     <td class="price-cell">
                         ${asset.type === 'savings' ? `
                             <span class="price-na">N/A</span>
