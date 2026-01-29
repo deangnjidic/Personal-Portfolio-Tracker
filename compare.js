@@ -26,7 +26,7 @@
 
     function setupEventListeners() {
         document.getElementById('backBtn').addEventListener('click', () => {
-            window.location.href = 'index.html';
+            window.location.href = 'app.html';
         });
 
         document.getElementById('compareNow').addEventListener('click', compareAssets);

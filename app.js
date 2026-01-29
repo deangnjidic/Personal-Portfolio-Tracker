@@ -1,4 +1,4 @@
-// Portfolio Tracker App - Vanilla JS
+// Free Portfolio Tracker App - Vanilla JS
 (function() {
     'use strict';
 

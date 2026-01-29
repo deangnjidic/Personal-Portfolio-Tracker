@@ -1,4 +1,4 @@
-# 💰 Portfolio Tracker
+# 💰 Free Portfolio Tracker
 
 > A beautiful, privacy-first portfolio tracker for stocks, crypto, and precious metals. No server, no database, no tracking - your data never leaves your device.
 
@@ -392,7 +392,8 @@ All data is stored in localStorage under the key `portfolio_v1`:
 ## Files
 
 **Main Pages:**
-- `index.html` - Main portfolio dashboard
+- `index.html` - Landing page
+- `app.html` - Main portfolio dashboard
 - `history.html` - Portfolio history tracker
 - `charts.html` - Charts and visualizations
 - `compare.html` - Asset comparison tool

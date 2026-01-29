@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Portfolio Tracker (Local)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Portfolio (Local)</h1>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                <div class="header-controls">
+                    <button id="refreshBtn" class="btn btn-primary">Refresh Prices</button>
+                    <button onclick="window.location.href='history.html'" class="btn btn-secondary">📈 History</button>
+                    <button onclick="window.location.href='charts.html'" class="btn btn-secondary">📊 Charts</button>
+                    <button onclick="window.location.href='compare.html'" class="btn btn-secondary">🔄 Compare</button>
+                    <button onclick="window.location.href='news.html'" class="btn btn-secondary">📰 News</button>
+                    <button onclick="window.location.href='import-csv.html'" class="btn btn-secondary">📥 Import CSV</button>
+                    <button id="exportBtn" class="btn btn-secondary">Export</button>
+                    <button id="importBtn" class="btn btn-secondary">Import</button>
+                    <button onclick="window.location.href='guide.html'" class="btn btn-secondary">📖 Guide</button>
+                    <button id="settingsBtn" class="btn btn-secondary">⚙️ Settings</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+                <a href="https://github.com/deangnjidic/Personal-Portfolio-Tracker/archive/refs/heads/main.zip" 
+                   class="btn btn-secondary" 
+                   style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 13px;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    Download ZIP
+                </a>
+            </div>
+        </div>
+        <div class="header-status">
+            <span id="lastUpdated">Last updated: Never</span>
+            <span id="updateStatus"></span>
+            <span id="assetsCount" class="assets-count">0 Assets</span>
+        </div>
+    </header>
+
+    <!-- Quick Stats Card -->
+    <section class="quick-stats" id="quickStats" style="display: none;">
+        <div class="stat-item stat-positive">
+            <span class="stat-label">📈 Best Performer</span>
+            <span class="stat-value" id="bestPerformer">-</span>
+        </div>
+        <div class="stat-item stat-negative">
+            <span class="stat-label">📉 Worst Performer</span>
+            <span class="stat-value" id="worstPerformer">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">💰 Total Value</span>
+            <span class="stat-value" id="quickTotalValue">$0.00</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">📊 Assets</span>
+            <span class="stat-value" id="quickAssetsCount">0</span>
+        </div>
+    </section>
+
+    <!-- Summary Cards -->
+    <section class="summary">
+        <div class="card">
+            <h3 id="person1TotalLabel">Person 1's Total</h3>
+            <div class="card-value" id="personATotal">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person2TotalLabel">Person 2's Total</h3>
+            <div class="card-value" id="personBTotal">$0.00</div>
+        </div>
+        <div class="card">
+            <h3>Combined Total</h3>
+            <div class="card-value" id="combinedTotal">$0.00</div>
+        </div>
+    </section>
+
+    <!-- Asset Type Summary Cards -->
+    <section class="summary">
+        <div class="card">
+            <h3>Stocks Total</h3>
+            <div class="card-value" id="stocksTotal">$0.00</div>
+            <div class="card-percent" id="stocksPercent">0%</div>
+        </div>
+        <div class="card">
+            <h3>Crypto Total</h3>
+            <div class="card-value" id="cryptoTotal">$0.00</div>
+            <div class="card-percent" id="cryptoPercent">0%</div>
+        </div>
+        <div class="card">
+            <h3>Metals Total</h3>
+            <div class="card-value" id="metalsTotal">$0.00</div>
+            <div class="card-percent" id="metalsPercent">0%</div>
+        </div>
+        <div class="card">
+            <h3>Savings Total</h3>
+            <div class="card-value" id="savingsTotal">$0.00</div>
+            <div class="card-percent" id="savingsPercent">0%</div>
+        </div>
+    </section>
+
+    <!-- Person by Asset Type Breakdown -->
+    <section class="summary summary-grid">
+        <div class="card">
+            <h3 id="person1StocksLabel">Person 1's Stocks</h3>
+            <div class="card-value" id="deanStocks">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person2StocksLabel">Person 2's Stocks</h3>
+            <div class="card-value" id="samStocks">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person1CryptoLabel">Person 1's Crypto</h3>
+            <div class="card-value" id="deanCrypto">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person2CryptoLabel">Person 2's Crypto</h3>
+            <div class="card-value" id="samCrypto">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person1MetalsLabel">Person 1's Metals</h3>
+            <div class="card-value" id="deanMetals">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person2MetalsLabel">Person 2's Metals</h3>
+            <div class="card-value" id="samMetals">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person1SavingsLabel">Person 1's Savings</h3>
+            <div class="card-value" id="deanSavings">$0.00</div>
+        </div>
+        <div class="card">
+            <h3 id="person2SavingsLabel">Person 2's Savings</h3>
+            <div class="card-value" id="samSavings">$0.00</div>
+        </div>
+    </section>
+
+    <!-- Holdings Controls -->
+    <section class="controls">
+        <div class="controls-left">
+            <div class="filter-group">
+                <label>Filter:</label>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="stock">Stocks</button>
+                <button class="filter-btn" data-filter="crypto">Crypto</button>
+                <button class="filter-btn" data-filter="metal">Metals</button>
+                <button class="filter-btn" data-filter="savings">Savings</button>
+            </div>
+            <input type="text" id="searchInput" placeholder="Search name or symbol..." class="search-input">
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button id="deleteAllBtn" class="btn btn-danger" style="background: #da3633; border-color: #da3633;">🗑️ Delete All Assets</button>
+            <button id="addAssetBtn" class="btn btn-primary">+ Add Asset</button>
+        </div>
+    </section>
+
+    <!-- Holdings Table -->
+    <section class="holdings-section">
+        <div class="table-wrapper">
+            <table id="holdingsTable" class="holdings-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="name">Asset ⇅</th>
+                        <th class="sortable" data-sort="type">Type ⇅</th>
+                        <th>Symbol</th>
+                        <th class="sortable" data-sort="price">Live Price ⇅</th>
+                        <th colspan="2" id="tableHeader1">Person 1</th>
+                        <th colspan="2" id="tableHeader2">Person 2</th>
+                        <th class="sortable" data-sort="combined">Combined Value ⇅</th>
+                        <th>% of Portfolio</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr class="sub-header">
+                        <th colspan="4"></th>
+                        <th>Qty</th>
+                        <th>Value</th>
+                        <th>Qty</th>
+                        <th>Value</th>
+                        <th colspan="3"></th>
+                    </tr>
+                </thead>
+                <tbody id="holdingsTableBody">
+                    <tr>
+                        <td colspan="11" class="empty-state">No assets added yet. Click "Add Asset" to get started.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Add/Edit Modal -->
+    <div id="assetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Asset</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="assetForm">
+                <input type="hidden" id="assetId">
+                
+                <div class="form-group">
+                    <label for="assetType">Type *</label>
+                    <select id="assetType" required>
+                        <option value="stock">Stock</option>
+                        <option value="crypto">Crypto</option>
+                        <option value="metal">Metal</option>
+                        <option value="savings">Savings</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="assetName">Name *</label>
+                    <input type="text" id="assetName" required placeholder="e.g., Apple, Bitcoin">
+                </div>
+
+                <div class="form-group">
+                    <label for="assetSymbol">Symbol *</label>
+                    <input type="text" id="assetSymbol" required placeholder="e.g., AAPL, BINANCE:BTCUSDT, gold, USD" autocomplete="off">
+                    <div id="symbolAutocomplete" class="autocomplete-dropdown"></div>
+                    <small class="help-text">Stock ticker (AAPL), crypto (BINANCE:BTCUSDT), metal (gold), or currency (USD)</small>
+                </div>
+
+                <div class="form-group" id="unitGroup" style="display: none;">
+                    <label for="assetUnit">Unit</label>
+                    <input type="text" id="assetUnit" placeholder="oz" value="oz">
+                </div>
+
+                <div class="form-section">
+                    <h3 id="formPerson1Label">Person 1's Holdings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p1Qty">Quantity</label>
+                            <input type="number" id="p1Qty" step="any" value="0" min="0">
+                            <div class="qty-adjust" id="p1Adjust" style="display: none;">
+                                <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p1', 'add')">+ Add</button>
+                                <input type="number" id="p1AdjustAmount" step="any" placeholder="Amount" style="width: 100px; margin: 5px 0;">
+                                <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p1', 'remove')">− Remove</button>
+                            </div>
+                        </div>
+                        <div class="form-group" id="p1DividendGroup" style="display: none;">
+                            <label for="p1Dividend">Annual Dividend ($)</label>
+                            <input type="number" id="p1Dividend" step="any" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 id="formPerson2Label">Person 2's Holdings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="p2Qty">Quantity</label>
+                            <input type="number" id="p2Qty" step="any" value="0" min="0">
+                            <div class="qty-adjust" id="p2Adjust" style="display: none;">
+                                <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p2', 'add')">+ Add</button>
+                                <input type="number" id="p2AdjustAmount" step="any" placeholder="Amount" style="width: 100px; margin: 5px 0;">
+                                <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p2', 'remove')">− Remove</button>
+                            </div>
+                        </div>
+                        <div class="form-group" id="p2DividendGroup" style="display: none;">
+                            <label for="p2Dividend">Annual Dividend ($)</label>
+                            <input type="number" id="p2Dividend" step="any" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettingsModal">&times;</button>
+            </div>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="person1Name">Person 1 Name:</label>
+                    <input type="text" id="person1Name" required maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="person2Name">Person 2 Name:</label>
+                    <input type="text" id="person2Name" required maxlength="50">
+                </div>
+                
+                <hr style="margin: 20px 0; border: 1px solid var(--border-color);">
+                
+                <div class="form-group">
+                    <label for="finnhubKey">Finnhub API Key:</label>
+                    <input type="text" id="finnhubKey" placeholder="Enter your Finnhub API key" maxlength="100">
+                    <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+                        Get a free key at <a href="https://finnhub.io/" target="_blank" style="color: var(--accent-color);">finnhub.io</a>
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="metalsDevKey">Metals.dev API Key:</label>
+                    <input type="text" id="metalsDevKey" placeholder="Enter your Metals.dev API key" maxlength="100">
+                    <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+                        Get a free key at <a href="https://metals.dev/" target="_blank" style="color: var(--accent-color);">metals.dev</a>
+                    </small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelSettingsBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load config and app -->
+    <script src="config.example.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

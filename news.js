@@ -31,7 +31,7 @@
 
     function setupEventListeners() {
         document.getElementById('backBtn').addEventListener('click', () => {
-            window.location.href = 'index.html';
+            window.location.href = 'app.html';
         });
 
         document.getElementById('refreshNewsBtn').addEventListener('click', () => {
@@ -119,7 +119,7 @@
                 url: '#',
                 image: '',
                 datetime: Date.now() / 1000,
-                source: 'Portfolio Tracker'
+                source: 'Free Portfolio Tracker'
             }];
         }
 
@@ -139,7 +139,7 @@
                 url: '#',
                 image: '',
                 datetime: Date.now() / 1000,
-                source: 'Portfolio Tracker'
+                source: 'Free Portfolio Tracker'
             }];
         }
 
