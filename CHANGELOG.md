@@ -9,8 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [1.13.0] - 2026-01-29
+
 ### Added
+- GDPR-compliant cookie consent banner for analytics tracking
+- Terms of Use page (terms.html) with comprehensive usage terms
+- Cookie consent management system (cookie-consent.js and cookie-consent.css)
+- Cookie consent documentation (COOKIE-CONSENT-DOCS.md)
+- Custom domain support configured (freeportfoliotracker.com)
 - Documentation section in README.md with links to all guides
+- Terms of Use link in footer navigation
+
+### Changed
+- Google Analytics now loads only after user consent (GDPR compliant)
+- Google Tag Manager now loads only after user consent
+- Updated all HTML files to use consent-based analytics loading
+- Google Tag Manager ID updated to GTM-PWHJ9WLH
+
+### Security
+- Cookie consent respects user privacy preferences
+- Analytics opt-in rather than opt-out (privacy-first approach)
+- User consent stored in localStorage (no cookies before consent)
 
 ---
 

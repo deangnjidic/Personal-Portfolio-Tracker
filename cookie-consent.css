@@ -1,0 +1,136 @@
+/* Cookie Consent Banner Styles */
+
+#cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+    border-top: 2px solid #30363d;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cookie-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cookie-text {
+    flex: 1;
+    color: #c9d1d9;
+}
+
+.cookie-text strong {
+    font-size: 18px;
+    color: #e6edf3;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.cookie-text p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.cookie-text a {
+    color: #58a6ff;
+    text-decoration: underline;
+}
+
+.cookie-text a:hover {
+    color: #79c0ff;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.cookie-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.cookie-accept {
+    background: linear-gradient(135deg, #238636 0%, #196c2e 100%);
+    color: white;
+}
+
+.cookie-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(35, 134, 54, 0.4);
+}
+
+.cookie-reject {
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+}
+
+.cookie-reject:hover {
+    background: #30363d;
+    border-color: #484f58;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 16px;
+    }
+
+    .cookie-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .cookie-btn {
+        width: 100%;
+    }
+
+    .cookie-text strong {
+        font-size: 16px;
+    }
+
+    .cookie-text p {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cookie-content {
+        padding: 12px;
+    }
+
+    .cookie-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}
