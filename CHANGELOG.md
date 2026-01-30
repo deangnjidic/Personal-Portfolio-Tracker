@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.15.1] - 2026-01-30
+
+### Fixed
+- Cookie consent "Accept" button now works correctly (fixed gtag function scope issue)
+- Google Analytics and GTM now load properly after accepting cookies
+
+---
+
 ## [1.15.0] - 2026-01-29
 
 ### Added
