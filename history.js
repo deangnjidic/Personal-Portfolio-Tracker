@@ -8,6 +8,7 @@
 
     function init() {
         loadState();
+        initializeAPIKeys();
         setupEventListeners();
         render();
         updateLastUpdated();
@@ -35,6 +36,16 @@
                 if (!state.assets) {
                     state.assets = [];
                 }
+                if (!state.settings) {
+                    state.settings = {
+                        baseCurrency: "USD",
+                        people: ['Person 1', 'Person 2'],
+                        apiKeys: {
+                            FINNHUB_KEY: '',
+                            METALS_DEV_KEY: ''
+                        }
+                    };
+                }
             } catch (e) {
                 console.error('Failed to parse stored data:', e);
                 state = { 
@@ -46,6 +57,14 @@
                         prices: {},
                         previousPrices: {},
                         changePercents: {}
+                    },
+                    settings: {
+                        baseCurrency: "USD",
+                        people: ['Person 1', 'Person 2'],
+                        apiKeys: {
+                            FINNHUB_KEY: '',
+                            METALS_DEV_KEY: ''
+                        }
                     }
                 };
             }
@@ -59,8 +78,34 @@
                     prices: {},
                     previousPrices: {},
                     changePercents: {}
+                },
+                settings: {
+                    baseCurrency: "USD",
+                    people: ['Person 1', 'Person 2'],
+                    apiKeys: {
+                        FINNHUB_KEY: '',
+                        METALS_DEV_KEY: ''
+                    }
                 }
             };
+        }
+    }
+
+    function initializeAPIKeys() {
+        // Initialize window.APP_CONFIG if it doesn't exist
+        if (!window.APP_CONFIG) {
+            window.APP_CONFIG = {
+                FINNHUB_KEY: '',
+                METALS_DEV_KEY: ''
+            };
+        }
+        
+        // Override APP_CONFIG with stored API keys from settings
+        if (state.settings?.apiKeys?.FINNHUB_KEY) {
+            window.APP_CONFIG.FINNHUB_KEY = state.settings.apiKeys.FINNHUB_KEY;
+        }
+        if (state.settings?.apiKeys?.METALS_DEV_KEY) {
+            window.APP_CONFIG.METALS_DEV_KEY = state.settings.apiKeys.METALS_DEV_KEY;
         }
     }
 
@@ -200,7 +245,8 @@
                 }
                 
                 const data = await response.json();
-                if (data.c) {
+                
+                if (data.c && data.c > 0) {
                     const cacheKey = `crypto:${symbol}`;
                     state.priceCache.prices[cacheKey] = data.c;
                     
@@ -432,7 +478,15 @@
         });
 
         // Update stats
-        document.getElementById('currentValue').textContent = formatCurrency(last.totalValue);
+        const currentValueEl = document.getElementById('currentValue');
+        const changeFromPrev = last.changeFromPrevious || 0;
+        const changePercentFromPrev = last.changePercentFromPrevious || 0;
+        const changeClass = changeFromPrev >= 0 ? 'positive' : 'negative';
+        const changeSign = changeFromPrev >= 0 ? '+' : '';
+        
+        // Show current value with change from previous snapshot
+        currentValueEl.innerHTML = `${formatCurrency(last.totalValue)} <span class="${changeClass}" style="font-size: 0.85em;">(${changeSign}${formatCurrency(changeFromPrev)} / ${changeSign}${changePercentFromPrev.toFixed(2)}%)</span>`;
+        
         document.getElementById('firstValue').textContent = formatCurrency(first.totalValue);
         
         const totalChangeEl = document.getElementById('totalChange');

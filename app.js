@@ -1063,6 +1063,7 @@
                 
                 if (response.ok) {
                     const data = await response.json();
+                    
                     if (data.c && data.c > 0) {
                         // Calculate 24h change using previous close
                         let changePercent = 0;

@@ -11,6 +11,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.17.0] - 2026-01-31
+
+### Added
+- Comprehensive SEO meta tags across all HTML pages (descriptions, keywords, OG tags, Twitter cards)
+- Open Graph tags for enhanced social media sharing on Facebook and LinkedIn
+- Twitter Card tags for better link previews on Twitter
+- Canonical URLs for all pages to prevent duplicate content issues
+- Enhanced page titles with descriptive keywords
+- Robots meta tags (index/noindex) for appropriate pages
+- API key initialization in History page from stored settings
+
+### Fixed
+- History page now properly loads API keys from localStorage (no more API key errors)
+- Crypto price fetching now works correctly from History page
+- Current Value in History page now displays change from previous snapshot with color coding
+- Change($) and Change(%) columns in History snapshots now show proper green/red colors
+
+### Changed
+- Updated all canonical URLs and OG tags with actual domain (freeportfoliotracker.com)
+- Improved SEO visibility for landing, guide, privacy, terms, and updates pages
+- Enhanced meta descriptions for better search engine results
+- Made internal app pages (app.html, history.html, etc.) noindex to keep user data private
+
+---
+
 ## [1.16.0] - 2026-01-30
 
 ### Added

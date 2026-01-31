@@ -317,6 +317,17 @@ button, a, input, select, textarea {
     color: #ef4444;
 }
 
+/* General positive/negative color classes */
+.positive {
+    color: #3fb950 !important;
+    font-weight: 600;
+}
+
+.negative {
+    color: #f85149 !important;
+    font-weight: 600;
+}
+
 /* Controls */
 .controls {
     background: #161b22;
