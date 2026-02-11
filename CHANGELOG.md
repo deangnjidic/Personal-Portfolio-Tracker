@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [1.20.0] - 2026-02-11
+
+### Added
+- Dynamic person names in Charts page comparison title (updates based on custom names from settings)
+- Modal explicit closing requirement - asset add/edit window only closes via X, Cancel, or Save buttons
+- Inline quantity adjustment controls for more compact form layout
+
+### Fixed
+- News page now properly loads Finnhub API key from localStorage settings
+- Charts page "Person vs Person" comparison title now dynamically displays custom names (was hardcoded "Dean vs Sam")
+- API keys saved in settings now properly propagate to News page
+
+### Changed
+- Removed dividend fields from asset add/edit modal (simplified data entry form)
+- Added 60px top margin to modal for better spacing from navigation bar
+- Quantity adjustment buttons (+ Add / − Remove) now display in horizontal inline layout
+- Removed click-outside-to-close functionality from modal to prevent accidental dismissal
+- Streamlined asset management interface for faster portfolio updates
+
+---
+
+## [1.19.0] - 2026-02-10
+
 ### Added
 - Google Consent Mode v2 implementation for GDPR-compliant analytics
 - consent-init.js script for managing consent state across all pages

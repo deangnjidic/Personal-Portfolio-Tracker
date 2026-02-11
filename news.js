@@ -23,10 +23,27 @@
         if (stored) {
             try {
                 state = JSON.parse(stored);
+                // Load API keys from state into window.APP_CONFIG
+                if (state.settings && state.settings.apiKeys) {
+                    if (state.settings.apiKeys.FINNHUB_KEY) {
+                        window.APP_CONFIG.FINNHUB_KEY = state.settings.apiKeys.FINNHUB_KEY;
+                    }
+                    if (state.settings.apiKeys.METALS_DEV_KEY) {
+                        window.APP_CONFIG.METALS_DEV_KEY = state.settings.apiKeys.METALS_DEV_KEY;
+                    }
+                }
             } catch (e) {
                 console.error('Failed to parse stored data:', e);
             }
         }
+    }
+
+    function getApiKey() {
+        // Check localStorage state first, then fall back to window.APP_CONFIG
+        if (state && state.settings && state.settings.apiKeys && state.settings.apiKeys.FINNHUB_KEY) {
+            return state.settings.apiKeys.FINNHUB_KEY;
+        }
+        return window.APP_CONFIG?.FINNHUB_KEY || '';
     }
 
     function setupEventListeners() {
@@ -94,7 +111,7 @@
     }
 
     async function fetchGeneralNews() {
-        const apiKey = window.APP_CONFIG.FINNHUB_KEY;
+        const apiKey = getApiKey();
         console.log('Fetching general news with API key:', apiKey ? 'Present' : 'Missing');
         const url = `https://finnhub.io/api/v1/news?category=general&token=${apiKey}`;
         
@@ -123,7 +140,7 @@
             }];
         }
 
-        const apiKey = window.APP_CONFIG.FINNHUB_KEY;
+        const apiKey = getApiKey();
         
         // Get unique stock symbols from portfolio
         const stockSymbols = [...new Set(

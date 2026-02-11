@@ -570,6 +570,7 @@ button, a, input, select, textarea {
     box-shadow: 0 4px 6px rgba(0,0,0,0.5);
     border: 1px solid #30363d;
     animation: modalSlideIn 0.3s ease-out;
+    margin-top: 60px;
 }
 
 @keyframes modalSlideIn {
@@ -704,6 +705,9 @@ button, a, input, select, textarea {
     background: #0d1117;
     border-radius: 4px;
     border: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-adjust {
@@ -746,6 +750,8 @@ button, a, input, select, textarea {
     padding: 6px 10px;
     border-radius: 4px;
     text-align: center;
+    width: 100px;
+    flex-shrink: 0;
 }
 
 .form-actions {

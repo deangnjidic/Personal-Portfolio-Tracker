@@ -85,6 +85,12 @@
     function createCharts() {
         const totals = calculateTotals();
 
+        // Update person comparison title
+        const comparisonTitle = document.getElementById('personComparisonTitle');
+        if (comparisonTitle) {
+            comparisonTitle.textContent = `${state.settings.people[0]} vs ${state.settings.people[1]} by Asset Type`;
+        }
+
         // Chart colors
         const colors = {
             stock: '#3b82f6',
@@ -148,7 +154,7 @@
                 labels: ['Stocks', 'Crypto', 'Metals', 'Savings'],
                 datasets: [
                     {
-                        label: 'John',
+                        label: state.settings.people[0],
                         data: [
                             totals.p1ByType.stock,
                             totals.p1ByType.crypto,
@@ -160,7 +166,7 @@
                         borderWidth: 1
                     },
                     {
-                        label: 'Maria',
+                        label: state.settings.people[1],
                         data: [
                             totals.p2ByType.stock,
                             totals.p2ByType.crypto,

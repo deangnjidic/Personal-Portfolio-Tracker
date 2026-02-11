@@ -295,38 +295,26 @@
 
                 <div class="form-section">
                     <h3 id="formPerson1Label">Person 1's Holdings</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="p1Qty">Quantity</label>
-                            <input type="number" id="p1Qty" step="any" value="0" min="0">
-                            <div class="qty-adjust" id="p1Adjust" style="display: none;">
-                                <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p1', 'add')">+ Add</button>
-                                <input type="number" id="p1AdjustAmount" step="any" placeholder="Amount" style="width: 100px; margin: 5px 0;">
-                                <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p1', 'remove')">− Remove</button>
-                            </div>
-                        </div>
-                        <div class="form-group" id="p1DividendGroup" style="display: none;">
-                            <label for="p1Dividend">Annual Dividend ($)</label>
-                            <input type="number" id="p1Dividend" step="any" value="0" min="0">
+                    <div class="form-group">
+                        <label for="p1Qty">Quantity</label>
+                        <input type="number" id="p1Qty" step="any" value="0" min="0">
+                        <div class="qty-adjust" id="p1Adjust" style="display: none;">
+                            <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p1', 'add')">+ Add</button>
+                            <input type="number" id="p1AdjustAmount" step="any" placeholder="Amount">
+                            <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p1', 'remove')">− Remove</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h3 id="formPerson2Label">Person 2's Holdings</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="p2Qty">Quantity</label>
-                            <input type="number" id="p2Qty" step="any" value="0" min="0">
-                            <div class="qty-adjust" id="p2Adjust" style="display: none;">
-                                <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p2', 'add')">+ Add</button>
-                                <input type="number" id="p2AdjustAmount" step="any" placeholder="Amount" style="width: 100px; margin: 5px 0;">
-                                <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p2', 'remove')">− Remove</button>
-                            </div>
-                        </div>
-                        <div class="form-group" id="p2DividendGroup" style="display: none;">
-                            <label for="p2Dividend">Annual Dividend ($)</label>
-                            <input type="number" id="p2Dividend" step="any" value="0" min="0">
+                    <div class="form-group">
+                        <label for="p2Qty">Quantity</label>
+                        <input type="number" id="p2Qty" step="any" value="0" min="0">
+                        <div class="qty-adjust" id="p2Adjust" style="display: none;">
+                            <button type="button" class="btn-adjust btn-add" onclick="window.portfolioApp.adjustQuantity('p2', 'add')">+ Add</button>
+                            <input type="number" id="p2AdjustAmount" step="any" placeholder="Amount">
+                            <button type="button" class="btn-adjust btn-remove" onclick="window.portfolioApp.adjustQuantity('p2', 'remove')">− Remove</button>
                         </div>
                     </div>
                 </div>

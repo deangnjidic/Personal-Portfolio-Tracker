@@ -474,12 +474,8 @@
             }
         });
 
-        // Close modal on outside click
-        document.getElementById('assetModal').addEventListener('click', (e) => {
-            if (e.target.id === 'assetModal') {
-                closeModal();
-            }
-        });
+        // Modal can only be closed via X, Cancel, or Save buttons
+        // (Removed outside click to close functionality)
     }
 
     // Modal Functions
@@ -508,8 +504,6 @@
 
         document.getElementById('p1Qty').value = asset.holdings.p1.qty;
         document.getElementById('p2Qty').value = asset.holdings.p2.qty;
-        document.getElementById('p1Dividend').value = asset.holdings.p1.dividend || 0;
-        document.getElementById('p2Dividend').value = asset.holdings.p2.dividend || 0;
         
         // Show adjust controls when editing
         document.getElementById('p1Adjust').style.display = 'block';
@@ -713,15 +707,8 @@
     function handleTypeChange() {
         const type = document.getElementById('assetType').value;
         const unitGroup = document.getElementById('unitGroup');
-        const p1DividendGroup = document.getElementById('p1DividendGroup');
-        const p2DividendGroup = document.getElementById('p2DividendGroup');
         
         unitGroup.style.display = type === 'metal' ? 'block' : 'none';
-        
-        // Show dividend fields only for stocks
-        const showDividend = type === 'stock';
-        if (p1DividendGroup) p1DividendGroup.style.display = showDividend ? 'block' : 'none';
-        if (p2DividendGroup) p2DividendGroup.style.display = showDividend ? 'block' : 'none';
     }
 
     function handleFormSubmit(e) {
@@ -735,9 +722,6 @@
 
         const p1Qty = parseFloat(document.getElementById('p1Qty').value) || 0;
         const p2Qty = parseFloat(document.getElementById('p2Qty').value) || 0;
-        
-        const p1Dividend = type === 'stock' ? (parseFloat(document.getElementById('p1Dividend').value) || 0) : 0;
-        const p2Dividend = type === 'stock' ? (parseFloat(document.getElementById('p2Dividend').value) || 0) : 0;
 
         const asset = {
             id: assetId || `asset_${Date.now()}`,
@@ -745,8 +729,8 @@
             symbol,
             name,
             holdings: {
-                p1: { qty: p1Qty, avgCost: 0, dividend: p1Dividend },
-                p2: { qty: p2Qty, avgCost: 0, dividend: p2Dividend }
+                p1: { qty: p1Qty, avgCost: 0, dividend: 0 },
+                p2: { qty: p2Qty, avgCost: 0, dividend: 0 }
             }
         };
 
