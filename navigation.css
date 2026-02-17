@@ -95,12 +95,19 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    .nav-bar {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    
     .nav-container {
         padding: 0 10px;
+        justify-content: space-between;
     }
     
     .nav-logo {
         margin-right: 10px;
+        flex-shrink: 0;
     }
     
     .nav-logo-text {
@@ -112,6 +119,8 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
+        justify-content: flex-start;
+        flex: 1;
     }
     
     .nav-links::-webkit-scrollbar {

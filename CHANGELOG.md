@@ -11,6 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.21.0] - 2026-02-17
+
+### Changed
+- Improved responsive design for mobile/tablet view:
+  - Summary cards now display in compact 2-column layout on phones (instead of single column)
+  - Combined Total card repositioned to top of summary section and spans full width on mobile
+  - Combined Total card text is now centered on mobile devices
+  - Navigation bar alignment improved for mobile view
+  - Reduced card padding and gaps for more efficient use of screen space
+  - Person breakdown cards (summary-grid) optimized with smaller fonts and tighter spacing on phones
+
+### Enhanced
+- Overall mobile user experience with better visual hierarchy and space utilization
+- Navigation properly aligned and fills available width on smaller screens
+
+---
+
 ## [1.20.0] - 2026-02-11
 
 ### Added

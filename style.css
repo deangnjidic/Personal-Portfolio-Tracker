@@ -1231,7 +1231,31 @@ button, a, input, select, textarea {
     }
     
     .summary {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .summary-grid .card {
+        padding: 6px 10px;
+    }
+    
+    .summary-grid .card h3 {
+        font-size: 9px;
+        margin-bottom: 3px;
+    }
+    
+    .summary-grid .card-value {
+        font-size: 16px;
+    }
+    
+    .card-combined-total {
+        grid-column: 1 / -1;
+        text-align: center;
     }
     
     .controls {
